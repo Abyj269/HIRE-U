@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Registration page
+        </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"  />
+        <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+        <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.5/dist/bootstrap-validate.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+
+
+       
+<body class="bg-secondary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand fw-bold" href="{% url 'index' %}"><i class="fa-solid fa-briefcase fa-sm"></i> Hire-U </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse " id="navbarColor01">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="btn btn-light fw-bold " href="{% url 'index' %}">Home
+                </a>
+              </li>
+            </ul>
+            
+          </div>
+        </div>
+    </nav>
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="container">
+      <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <!-- <div class="border border-5 border-primary"></div> -->
+          <div class="card bg-white shadow-lg">
+            <div class="card-body p-5">
+               
+              <form class="mb-2 mt-md-2 "  id="jsregform" method="POST">
+                {% csrf_token %}
+                <h2 class="fw-bold mb-2 text-uppercase "><i class="fa-solid fa-briefcase fa-sm "></i> Hire-U</h2>
+                <p class=" mb-3">Please Register as a <strong>Jobseeker</strong>!</p>
+               
+                  <div class="mb-3">
+                    <label for="username" class="form-label ">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="" required>
+                    <!-- <span id="username_error" ></span> -->
+                    <div id="username_availability"></div>
+                  </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label ">Email address</label>
+                  <input type="email" class="form-control" id="email" placeholder="" name="email" required>
+                  <div id="email_availability"></div>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="password" class="form-label ">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder=""required >
+                  
+                </div>
+                <div class="mb-3">
+                   <label for="cpassword" class="form-label ">Confirm Password</label>
+                  <input type="password" class="form-control" name="cpassword" id="cpassword" placeholder="" required>
+                  
+                </div>
+                <!-- <input type="text" name="role" value="is_jobseeker" hidden> -->
+                <div class="d-grid">
+                  <input class="btn btn-primary fw-bold" type="submit" value="Create Account"></input>
+                </div>
+                
+              </form>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script>
+
+//Ajax request and response to check whether username is present and  available
+
+$(document).ready(function() {
+  $('#username').keyup(function() {
+    var username = $(this).val();
+    if (username.length == 0) {
+      $('#username_availability').html('<span class="text-danger">Username is Required</span>');
+      return;
+    }
+    $('#username_error').html('');
+    if (username.length >= 3) {
+      $.ajax({
+        url: '/check_username/',
+        type: 'POST',
+        data: {'username': username},
+        beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        },
+        success: function(response) {
+          if (response.status == 'available') {
+            $('#username_availability').html('<span class="text-success">Username is available</span>');
+          } 
+          else {
+            $('#username_availability').html('<span class="text-danger">Username is not available</span>');
+          }
+        }
+      });
+    } 
+    else {
+      $('#username_availability').html('<span class="text-danger">Username should have more than 3 characters</span>');
+    }
+  });
+
+
+  $('#email').keyup(function() { 
+    var email = $(this).val();
+    if (email.length == 0) {
+      $('#email_availability').html('<span class="text-danger">Username is Required</span>');
+      return;
+    }
+      $.ajax({
+        url: '/check_email/',
+        type: 'POST',
+        data: {'email': email},
+        beforeSend: function(xhr) {
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        },
+        success: function(response) {
+          if (response.status == 'available') {
+            $('#email_availability').html('<span class="text-success">Email is available</span>');
+          } 
+          else {
+            $('#email_availability').html('<span class="text-danger">Email is not available</span>');
+          }
+        }
+      });
+    
+   
+  });
+
+
+
+});
+
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+//Ajax request and response to check whether email is present and  available
+
+
+
+
+bootstrapValidate('#email', 'email:Enter a valid E-Mail!');
+bootstrapValidate('#cpassword', 'matches:#password:Password is not matching')
+
+
+
+
+</script>
+
+
+</html>

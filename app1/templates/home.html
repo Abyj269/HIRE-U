@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Hire-U Recruitment Portal
+        </title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"  />
+        <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
+            <div class="container-fluid">
+              <a class="navbar-brand fw-bold" href="{% url 'index' %}"><i class="fa-solid fa-briefcase fa-sm"></i> Hire-U </a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse " id="navbarColor01">
+                <ul class="navbar-nav me-auto ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active fw-bold" href="#Home">Home
+                      <span class="visually-hidden">(current)</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link fw-bold" href="#About">About</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link fw-bold" href="#">Services</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{% url 'loginpage' %}" class="btn btn-light fw-bold ms-3"> Login</a>
+                  </li>
+                  
+                </ul>
+                
+              </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            <section id="hero" class="d-flex align-items-center" data-bs-spy="scroll" class="scrollspy-example" tabindex="0">
+
+            <div class="container-fluid">
+                <marquee style="font-size:1rem" class="text-primary"><b>Dear Jobseeker, Thank you for using Hire-U Job Recruitment Portal! Inorder to connect you with the right employers, kindly ensure all the fields in your profile are completed. Please check each and every field in your profile and confirm whether the details are correct and updated. If you have undergone any training/took new skill courses in this period kindly include its details under 'Skills' in your profile.</b></marquee>
+                <div class="row mb-5 ms-4" id="Home">
+                    <div class="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-1" data-aos="fade-up" data-aos-delay="200">
+                    <p style="font-size: 2rem;   font-weight: 700;" class="text-primary">Get Your Dream Job Today</p>
+                    <p style="font-size:1rem" class="text-primary"><span class="text-primary">Your search for workplace and working pool begins here!</span><br><br>A single window digital platform for potential candidates to connect with prospective employers through self-registration.<br><br>Create an account for free, and apply/ post employment opportunities across Kerala. A few minutes, a few clicks for a plethora of placement possibilities.</p><br>
+                    
+                        <div class="d-lg-flex mt-3 mb-3">
+                            <a href="" class="btn  btn-primary text-light btn-lg fw-bold ">Apply Job</a>
+                            <a href="" class="btn  btn-primary text-light btn-lg fw-bold ms-3">Post Job</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="{% static 'images/cover2.jpg'%}" class="img-fluid" alt="">
+                    </div>
+                    
+                </div>
+                <br>
+            </div>
+        
+            </section> 
+        </div>
+        <div class="container-fluid">
+            <section id="hero" class="d-flex align-items-center" data-bs-spy="scroll" class="scrollspy-example" tabindex="0">
+           
+                    <div class="row mt-5 bg-dark" id="About">
+                        <div class="container mt-3">
+                        <h3 class="text-center text-light">
+                            About Us
+                        </h3>
+                        </div>
+                        <div class="container m-4 mt-5 mb-5 ">
+                            <p class="text-light">
+                                Hire-U is a Kerala Government-undertaking that focuses on skilling students and the general public to enhance employability.  Kerala has designed an exclusive industry-led skill training ecosystem through Skill Development Centres. It connects higher secondary schools, polytechnic institutes, and arts & science and engineering colleges to 16 Community Skill Parks.
+                
+                                    ASAP Kerala has 12 NSQF Skill Qualifications registered in the National Qualifications Register (NQR). Preparing youth for a rapidly evolving future through state-of-the-art training programmes <br>in highly demanding areas is the objective of ASAP Kerala.
+                                    ASAP Kerala has made a positive impact on raising the employability of the State's manpower.
+                                </p>
+                        </div>
+                    
+                  
+    
+                    
+                </div>
+          
+            
+        </section>
+        </div>
+        
+
+        <footer class="mt-auto  bg-primary" >
+
+            <div class="container">
+        
+               
+                <div class="footer-widgets-wrap clearfix">
+        
+                    <div class="col_two_third">
+        
+                        <div class="widget clearfix">
+        
+                            <img src=" " alt="" class="alignleft" style="margin-top: 8px; padding-right: 18px; border-right: 1px solid #4A4A4A;">
+        
+        
+                            <div class="row">
+        
+                                <div class="col-md-4  bottommargin-sm widget_links">
+        
+                                    <div style="background-size: 100%">
+                                        <address class="text-white">
+        
+                                            <strong>Copyright &copy;<script>document.write(new Date().getFullYear()) </script></strong><br>Amal
+                                         Jyothi College Kanjirapally,Koovapally,<br>Kottayam
+                                        </address>
+                                    </div>
+                                </div>
+        
+        
+        
+                                <div class="col-md-4 col-xs-6 bottommargin-sm widget_links">
+                                    <ul class="list-unstyled">
+                                        <li><a href="aboutus.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> About the Portal</a></li>
+                                        <li><a href="termsofuse.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> Terms of Use</a> <!-- terms_of_use.jsp --></li>
+                                        <li><a href="accstatement.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> Accessibility
+                                                Statement</a> <!-- accessibility-statement.jsp --></li>
+                                        <li><a href="disclaimer.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> Disclaimer</a> <!-- disclaimer.jsp --></li>
+                                    </ul>
+                                </div>
+        
+                                <div class="col-md-4 col-xs-6 bottommargin-sm widget_links">
+                                    <ul class="list-unstyled">
+        
+                                        <li><a href="privacypolicy.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> Privacy Policy</a> <!-- disclaimer.jsp --></li>
+                                        <li><a href="#" class="text-light"><i class="fa fa-caret-right text-light"></i> Job Fair</a>
+                                        <!-- faq.jsp --></li>
+                                        <li><a href="contactus.jsp" class="text-light"><i class="fa fa-caret-right text-light"></i> Contact Us</a>
+                                        <!-- contact_us.jsp --></li>
+                                        <li><a href="#" class="text-light"><i class="fa fa-caret-right text-light"></i> FAQ</a>
+                                        <!-- faq.jsp --></li>
+                                    </ul>
+                                </div>
+        
+                            </div>
+        
+                        </div>
+        
+                    </div>
+        
+        
+        
+                </div>
+               
+            </div>
+        
+            <!-- Copyrights
+                    ============================================= -->
+            <div id="copyrights">
+        
+                <div class="container clearfix">
+        
+                    <div class="col-md-12" align="center">
+                        <div class="copyrights-menu copyright-links clearfix text-light">
+                            Designed, Developed and Managed by<br> Aby Jose 
+                        </div>
+                     
+                    </div>
+                </div>
+        
+            </div>
+            <!-- #copyrights end -->
+        
+        </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+  
+</html>
