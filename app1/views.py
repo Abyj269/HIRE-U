@@ -99,4 +99,4 @@ def candidatepage(request):
     return render(request,'jobseeker/home.html')
 
 def employeerpage(request):
-    return render(request,'employeer/home.html')
+    return render(request,'employeer/dist/index.html')
