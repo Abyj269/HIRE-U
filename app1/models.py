@@ -75,3 +75,21 @@ class Employeer(User):
 #         EmployeerProfile.objects.create(user=instance)
 
 
+class Jobdetails(models.Model):
+    job_id = models.AutoField(primary_key=True)
+    job_title = models.CharField(max_length=100)
+    job_description = models.CharField(max_length=500)
+    contact_email = models.CharField(max_length=100)
+    job_type = models.CharField(max_length=100)
+    specialisation = models.CharField(max_length=100)
+    experience = models.IntegerField(blank=True, null=True)
+    expected_salary = models.CharField(max_length=100)
+    qualification = models.CharField(max_length=100)
+    vacancies = models.IntegerField(blank=True, null=True)
+    lastdate =  models.DateField()
+    cmp_id = models.ForeignKey(Employeer,default=None,on_delete=models.CASCADE)
+
+@property
+def id(self):
+    return self.cmp_id.id
+    

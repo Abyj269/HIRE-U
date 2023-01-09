@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect,HttpResponse
 # from django.contrib.auth.models import User
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User
 from django.contrib import messages
+from app1.models import Jobdetails
 
 def index(request):
     return render(request,"home.html")
@@ -91,6 +92,58 @@ def rregpage(request):
 
     return render(request,"rregistration.html")
 
+def logout_view(request):
+    logout(request)
+    return redirect('loginpage')
+
+
+def postjob(request):
+    if request.method == 'POST':
+        jobtitle= request.POST.get('job_title')
+        jobdescription = request.POST.get('job_description')
+        email = request.POST.get('contact_email')
+        jobtype = request.POST.get('jobtype')
+        specialisation= request.POST.get('specialisation')
+        experience = request.POST.get('experience')
+        salary = request.POST.get('salary')
+        vaccancies = request.POST.get('vaccancies')
+        qualification=request.POST.get('qualification')
+        lastdate = request.POST.get('lastdate')
+        postedjob= Jobdetails(
+            job_title=jobtitle,
+            job_description=jobdescription,
+            contact_email=email,
+            job_type=jobtype,
+            specialisation=specialisation,
+            experience=experience,
+            expected_salary=salary,
+            vacancies=vaccancies,
+            qualification=qualification,
+            lastdate=lastdate,
+            )
+        postedjob.save()
+        messages.success(request,"Job is Successfully Posted" )
+        return redirect('employeerpage')
+    
+    return render(request,'employeer/postjob.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def adminpage(request):
     return render(request,'admin.html')
@@ -99,4 +152,5 @@ def candidatepage(request):
     return render(request,'jobseeker/home.html')
 
 def employeerpage(request):
-    return render(request,'employeer/dist/index.html')
+    return render(request,'employeer/home.html')
+

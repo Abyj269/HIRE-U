@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,8 @@
     
     <link rel="stylesheet" href="{% static 'employeer\assets\css\bootstrap.css' %}">
     
-    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="{% static 'employeer\assets\vendors\perfect-scrollbar\perfect-scrollbar.css' %}">
+    <link rel="stylesheet" href="{% static 'employeer\assets\css\app.css' %}">
     <link rel="shortcut icon" href="{% static 'employeer\assets\images\favicon.svg' %}" type="image/x-icon">
 </head>
 <body>
@@ -16,7 +17,7 @@
         <div id="sidebar" class='active'>
             <div class="sidebar-wrapper active">
     <div class="sidebar-header">
-        <img src="assets/images/logo.svg" alt="" srcset="">
+        <img src="{% static 'employeer\assets\images\logo.svg' %}" alt="" srcset="">
     </div>
     <div class="sidebar-menu">
         <ul class="menu">

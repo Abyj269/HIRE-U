@@ -12,4 +12,7 @@ urlpatterns = [
     path('adminpage/', views.adminpage, name='adminpage'),
     path('candidate', views.candidatepage, name='candidatepage'),
     path('employeer', views.employeerpage, name='employeerpage'),
+    path('logout', views.logout_view, name='logout'),
+    path('postjob', views.postjob, name='postjob'),
+    
     ]

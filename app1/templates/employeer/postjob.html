@@ -1,0 +1,137 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Post New Job</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'postjob' %}">Jobsettings</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Post Job</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Add Job</h4>
+        </div>
+        
+        <div class="card-body">
+            {% for message in messages %}
+            <div class="alert {{ message.tags}} alert-dismissible show fade">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            <form id="postjob" method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Job Title" class="form-label">Job Title</label>
+                            <input type="text" class="form-control" id="Job Title" name="job_title" placeholder="Enter job title">
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="jobdescription" class="form-label">Job Description</label>
+                            <textarea class="form-control" id="jobdescription" rows="3" name="job_description" placeholder="Enter short description"></textarea>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailid" name="contact_email" placeholder="Enter Email">
+                            </div>
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="jobtype" class="form-label">Job Type</label>
+                                <fieldset class="form-group">
+                                    <select class="form-select" id="basicSelect" name="jobtype">
+                                        <option>--Select--</option>
+                                        <option value="Full Time">Full Time</option>
+                                        <option value="Part Time">Part Time</option>
+                                        <option value="Freelancer">Freelancer</option>
+                                    </select>
+                                </fieldset>       
+                            </div>    
+                            
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="specialisation" class="form-label">Specialisation</label>
+                                <fieldset class="form-group">
+                                    <select class="form-select" id="basicSelect" name="specialisation">
+                                        <option>--Select--</option>
+                                        <option value="Cloud Computing">Cloud Computing</option>
+                                        <option value="Machine Learning">Machine Learning</option>
+                                        <option value="Blockchain Technology">Blockchain Technology</option>
+                                    </select>
+                                </fieldset>       
+                            </div>    
+
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="experience" class="form-label">Experience</label>
+                                <input type="number" class="form-control" name="experience" id="experience" placeholder="Enter required experience"></input>    
+                            </div>
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="expectedsalary" class="form-label">Expected Salary</label>
+                                <fieldset class="form-group">
+                                    <select class="form-select" id="basicSelect" name="salary">
+                                        <option>--Select--</option>
+                                        <option value="No Salary">No Salary</option>
+                                        <option value="Around 1 lakh per annum">Around 1 lakh per annum</option>
+                                        <option value="Around 2 lakh per annum">Around 2 lakh per annum</option>
+                                        <option value="Around 3 lakh per annum">Around 3 lakh per annum</option>
+                                        <option value="Around 4 lakh per annum">Around 4 lakh per annum</option>
+                                        <option value="Around 5 lakh per annum">Around 5 lakh per annum</option>
+                                    </select>
+                                </fieldset>       
+                            </div> 
+
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="qualification" class="form-label">Qualification</label>
+                                <fieldset class="form-group">
+                                    <select class="form-select" id="basicSelect" name="qualification">
+                                        <option>--Select--</option>
+                                        <option value="Btech">Btech</option>
+                                        <option value="MCA">MCA</option>
+                                        
+                                    </select>
+                                </fieldset>       
+                            </div> 
+
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="vaccancies" class="form-label">Vaccancies</label>
+                                <input type="number" class="form-control" name="vaccancies" id="vaccancies" placeholder="Enter number of vaccancies">
+                            </div>
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="lastdate" class="form-label">Last date</label>
+                                <input type="date" class="form-control" id="lastdate" name="lastdate" placeholder="Enter Last date to apply for job">
+                            </div>
+                            
+        
+                    </div>
+                    
+                </div>
+                <button class="btn btn-primary" type="submit">Post Job</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+    
+    
+
+
+{% endblock %}
