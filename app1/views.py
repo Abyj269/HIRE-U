@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User
 from django.contrib import messages
-from app1.models import Jobdetails
+from app1.models import Jobdetails,Qualifications
 
 def index(request):
     return render(request,"home.html")
@@ -121,16 +121,36 @@ def postjob(request):
             qualification=qualification,
             lastdate=lastdate,
             )
+        postedjob.cmp_id=request.user    
         postedjob.save()
         messages.success(request,"Job is Successfully Posted" )
-        return redirect('employeerpage')
+        return redirect('postjob')
     
     return render(request,'employeer/postjob.html')
 
 
 
+def addqualification(request):
+    if request.method == 'POST':
+        quali =request.POST.get('qualification')
+
+        addedqualification= Qualifications(
+            qualification_name=quali,
+            )
+        addedqualification.cmp_id=request.user
+        addedqualification.save()
+        return redirect('addqualification')
+    
+   
+    pos = Qualifications.objects.all()
+    context ={
+        'pos': pos
+    }
+    return render(request,'employeer/addqualification.html',context)
 
 
+    
+    
 
 
 
@@ -149,7 +169,7 @@ def adminpage(request):
     return render(request,'admin.html')
 
 def candidatepage(request):
-    return render(request,'jobseeker/home.html')
+    return render(request,'jobseeker/profile.html')
 
 def employeerpage(request):
     return render(request,'employeer/home.html')

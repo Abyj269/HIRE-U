@@ -87,9 +87,18 @@ class Jobdetails(models.Model):
     qualification = models.CharField(max_length=100)
     vacancies = models.IntegerField(blank=True, null=True)
     lastdate =  models.DateField()
-    cmp_id = models.ForeignKey(Employeer,default=None,on_delete=models.CASCADE)
+    cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
+
+
+class Qualifications(models.Model):
+    quali_id = models.AutoField(primary_key=True) 
+    qualification_name = models.CharField(max_length=100)
+    cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
+    status=models.BooleanField('status',default=0)
+
 
 @property
 def id(self):
     return self.cmp_id.id
     
+

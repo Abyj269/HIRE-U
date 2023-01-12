@@ -14,5 +14,5 @@ urlpatterns = [
     path('employeer', views.employeerpage, name='employeerpage'),
     path('logout', views.logout_view, name='logout'),
     path('postjob', views.postjob, name='postjob'),
-    
+    path('addqualification', views.addqualification, name='addqualification'),
     ]

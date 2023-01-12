@@ -1,0 +1,90 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Job Post Settings</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'postjob' %}">Jobsettings</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Fields</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Add Qualification</h4>
+        </div>
+        
+        <div class="card-body">
+            {% for message in messages %}
+            <div class="alert {{ message.tags}} alert-dismissible show fade">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            <form  method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="qualification" class="form-label">Qualification</label>
+                            <input type="text" class="form-control" id="qualification" name="qualification" placeholder="Add qualification">
+                            <input type="text"  name="qu" value="{{user.id}}" hidden>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Add Qualifications</button> 
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">View Qualification</h4>
+        </div>
+        
+        <div class="card-body">
+          
+            <table class='table table-bordered' id="table1">
+                <thead>
+                    <tr>
+                        <th>Qualification</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if pos %}
+                    {% for i in pos %}
+                    <tr>
+                        <td>{{i.qualification_name}}</td>
+                        <td>{% if 'i.status==0' %}
+                                <span class="badge bg-danger">Inactive</span>
+                            {% else %}
+                                <span class="badge bg-success">Active</span>
+                            {% endif%}
+                        </td>
+                        <td>
+                            <a href="" class="btn btn-danger">Delete</a>
+                            <a href="" class="btn btn-success">Edit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% endif %}
+            </table>
+           
+        </div>
+    </div>
+
+</div>
+{% endblock %}
