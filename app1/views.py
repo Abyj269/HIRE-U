@@ -3,14 +3,22 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from app1.models import Jobseeker,Employeer,User
+from app1.models import Jobseeker,Employeer,User,Qualifications
 from django.contrib import messages
 from app1.models import Jobdetails,Qualifications
+from django.views import generic
+from django.urls import reverse
+from .models import Qualifications
+from django.contrib.auth.decorators import login_required
+
 
 def index(request):
     return render(request,"home.html")
 
 def loginpage(request):
+    if request.user.is_authenticated:
+        return redirect('loginpage')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -96,7 +104,8 @@ def logout_view(request):
     logout(request)
     return redirect('loginpage')
 
-
+#Employeer Views 
+@login_required(login_url='/login')
 def postjob(request):
     if request.method == 'POST':
         jobtitle= request.POST.get('job_title')
@@ -125,35 +134,92 @@ def postjob(request):
         postedjob.save()
         messages.success(request,"Job is Successfully Posted" )
         return redirect('postjob')
-    
-    return render(request,'employeer/postjob.html')
+    else:
+        pos = Qualifications.objects.all
+        context ={
+        'pos': pos,
+        }
+        return render(request,'employeer/postjob.html',context)
 
 
+    # Job Post Seeting and Add Qualification
 
-def addqualification(request):
+def addqualification(request,id):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            quali =request.POST.get('qualification')
+
+            addedqualification= Qualifications(
+                qualification_name=quali,
+                )
+            addedqualification.cmp_id=request.user
+            addedqualification.save()
+            messages.success(request,"Qualification is added" )
+            return redirect(request.META['HTTP_REFERER'])
+        
+        
+        pos = Qualifications.objects.filter(cmp_id_id=id)
+        context ={
+            'pos': pos
+        }
+        return render(request,'employeer/addqualification.html',context)
+    return redirect('loginpage')
+
+def qualificationdelete(request,id):
+        quali = Qualifications.objects.filter(quali_id=id)
+        quali.delete()
+        return redirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/login')
+def qualificationupdate(request,id):
+    quali = Qualifications.objects.get(pk=id)
     if request.method == 'POST':
-        quali =request.POST.get('qualification')
+        value =request.POST.get('qualification')
+        Qualifications.objects.filter(quali_id=id).update(qualification_name=value)
+        value = quali.cmp_id_id
+        return redirect(reverse('addqualification',args=[value]))
+    else:   
+             
+        current_value = quali.qualification_name
+        return render(request,'employeer/editqualification.html',{
+            'detail':quali,'current_value':current_value
+    })
 
-        addedqualification= Qualifications(
-            qualification_name=quali,
-            )
-        addedqualification.cmp_id=request.user
-        addedqualification.save()
-        return redirect('addqualification')
-    
+
+def deletejob(request,id):
+        jobs = Jobdetails.objects.filter(job_id=id)
+        jobs.delete()
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+def managejobs(request ,id):
+    if request.user.is_authenticated:
+        pos = Jobdetails.objects.filter(cmp_id_id=id)
+        context ={
+            'pos': pos
+        }
+        return render(request,'employeer/managejobs.html',context) 
+    return redirect('loginpage')
+
+
+
+
+
+# class QualificationDelete(generic.DeleteView):
+#     model=Qualifications
+#     template_name= 'addqualifications.html'
+#     success_url=reverse_lazy('employeer/addqualifications/<int:id>')
+
    
-    pos = Qualifications.objects.all()
-    context ={
-        'pos': pos
-    }
-    return render(request,'employeer/addqualification.html',context)
-
-
-    
-    
 
 
 
+
+
+# Jobseeker Views
+
+def editprofile(request):
+    return render(request,'jobseeker/home.html')
 
 
 
@@ -161,16 +227,18 @@ def addqualification(request):
 
 
 
-
-
-
+#To render different User Home pages
 
 def adminpage(request):
     return render(request,'admin.html')
 
-def candidatepage(request):
-    return render(request,'jobseeker/profile.html')
 
+def candidatepage(request):
+    if request.user.is_authenticated:
+        return render(request,'jobseeker/profile.html')
+    return redirect('loginpage')
+
+@login_required(login_url='/login')
 def employeerpage(request):
     return render(request,'employeer/home.html')
 

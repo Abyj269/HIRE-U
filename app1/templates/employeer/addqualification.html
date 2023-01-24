@@ -3,7 +3,7 @@
 <div class="page-title">
     <div class="row">
         <div class="col-12 col-md-6 order-md-1 order-las">
-            <h3>Job Post Settings</h3>
+            <h3>Settings</h3>
         </div>
         
         <div class="col-12 col-md-6 order-md-2 order-first">
@@ -31,6 +31,7 @@
                 </button>
             </div>
             {% endfor %}
+           
             <form  method="post">
                 {% csrf_token %}
                 <div class="row">
@@ -38,12 +39,14 @@
                         <div class="form-group mb-3">
                             <label for="qualification" class="form-label">Qualification</label>
                             <input type="text" class="form-control" id="qualification" name="qualification" placeholder="Add qualification">
-                            <input type="text"  name="qu" value="{{user.id}}" hidden>
+                            <!-- <input type="text"  name="qu" value="{{user.id}}" hidden> -->
                         </div>
                     </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Add Qualifications</button> 
+               
             </form>
+
         </div>
     </div>
 
@@ -64,7 +67,7 @@
                 </thead>
                 <tbody>
                 {% if pos %}
-                    {% for i in pos %}
+                   {% for i in pos %}
                     <tr>
                         <td>{{i.qualification_name}}</td>
                         <td>{% if 'i.status==0' %}
@@ -74,13 +77,15 @@
                             {% endif%}
                         </td>
                         <td>
-                            <a href="" class="btn btn-danger">Delete</a>
-                            <a href="" class="btn btn-success">Edit</a>
+                            <a  class="btn btn-danger" href="{% url 'qualificationdelete' i.quali_id %}">Delete</a>     
+                            <a  class="btn btn-success" href ="{% url 'qualificationupdate' i.quali_id %}">Edit</a>
                         </td>
                     </tr>
                     {% endfor %}
-                </tbody>
+                
                 {% endif %}
+              
+                </tbody>
             </table>
            
         </div>

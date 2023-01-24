@@ -52,11 +52,12 @@
                         </li>
                         
                         <li>
-                            <a href="{% url 'addqualification' %}">Job Post Settings</a>
+                            
+                            <a href="{% url 'managejobs' user.id %}">Job Post Settings</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a href="">View Posted Jobs</a>
-                        </li>
+                        </li> -->
                         
                     </ul>
                     
@@ -79,6 +80,27 @@
                         
                     </ul>
                 </li>
+
+                <li class="sidebar-item has-sub" >
+                    <a href="" class='sidebar-link'>
+                        <i data-feather="settings" width="20"></i> 
+                        <span>Settings</span>
+                    </a>   
+                    <ul class="submenu ">
+                        
+                        <li>
+                            <a href="{%url 'addqualification' user.id %}">Add Qualifications</a>
+                        </li>
+                        
+                        <li>
+                            <a href="">Add Skills Required</a>
+                        </li>
+                     
+                        
+                    </ul>
+                </li>
+            
+            
             
             
             

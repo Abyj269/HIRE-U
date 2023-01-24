@@ -102,10 +102,13 @@
                                 <label for="qualification" class="form-label">Qualification</label>
                                 <fieldset class="form-group">
                                     <select class="form-select" id="basicSelect" name="qualification">
-                                        <option>--Select--</option>
-                                        <option value="Btech">Btech</option>
-                                        <option value="MCA">MCA</option>
-                                        
+                                        <option >--Select--</option>
+                                        {% for i in pos %}
+                                                {% if i.cmp_id_id == 3 %}
+                                                    <option value='{{i.quali_id}}'>{{ i.qualification_name }}</option>
+                                                {% endif %}
+                                        {% endfor %}
+
                                     </select>
                                 </fieldset>       
                             </div> 

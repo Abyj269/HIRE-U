@@ -95,6 +95,9 @@ class Qualifications(models.Model):
     qualification_name = models.CharField(max_length=100)
     cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
     status=models.BooleanField('status',default=0)
+    
+    def __str__(self):
+        return self.qualification_name
 
 
 @property
