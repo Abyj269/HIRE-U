@@ -1,0 +1,100 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Profile</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'editemployeerprofile' user.id %}">Editprofile</a></li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Edit Profile</h4>
+        </div>
+        
+        <div class="card-body">
+            
+            <form id="editprofile" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Company-Name" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="Company-Name" name="Company-Name" placeholder="Enter Company Name" value="{% if company_name %}{{company_name}}{% endif %}">
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Office-Location" class="form-label">Office Location</label>
+                            <input type="text" class="form-control" id="Office-Location" name="Office-Location" placeholder="Enter Location" value="{% if office_location %}{{office_location}}{% endif %}">
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Address" class="form-label">Address</label>
+                            <textarea class="form-control" id="Address" rows="3" name="Address" placeholder="Enter Address">{% if address %}{{address}}{% endif %}</textarea>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Pincode" class="form-label">Pincode</label>
+                            <input type="number" class="form-control" id="Pincode" name="Pincode" placeholder="Enter Pincode" value="{% if pincode %}{{pincode}}{% endif %}">
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Website-URL" class="form-label">Website URL</label>
+                            <input type="url" class="form-control" id="Website-URL" name="Website-URL" placeholder="Enter Website URL" value="{% if website_url %}{{website_url}}{% endif %}">
+                        </div> 
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="Phoneno" class="form-label">Phone Number</label>
+                            
+                            <input type="number" class="form-control" id="Phoneno" name="Phoneno" placeholder="Phoneno" value="{{phone_number}}">
+                           
+                        </div> 
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="logo" class="form-label">Company Logo</label>
+                            <input type="file" class="form-control" id="logo" name="logo" >
+                            {% if company_logo %}
+                            <img src="{{company_logo.url}}" style="width:210px; height:200px ;">
+                            {% endif %}
+                        </div> 
+                    </div>
+                   
+                    
+                </div>
+                <button class="btn btn-primary" type="submit">Update Profile</button>
+            </form>
+
+
+
+        </div>
+    </div>
+
+    
+
+
+
+
+
+
+</div>
+{% endblock %}
+

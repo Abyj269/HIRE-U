@@ -104,8 +104,10 @@
                                     <select class="form-select" id="basicSelect" name="qualification">
                                         <option >--Select--</option>
                                         {% for i in pos %}
-                                                {% if i.cmp_id_id == 3 %}
-                                                    <option value='{{i.quali_id}}'>{{ i.qualification_name }}</option>
+                                                {% if i.cmp_id_id == user_id %}
+                                                    {% if i.status == 1 %}
+                                                        <option value='{{i.quali_id}}'>{{ i.qualification_name }}</option> 
+                                                    {% endif %}
                                                 {% endif %}
                                         {% endfor %}
 

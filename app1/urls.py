@@ -2,9 +2,10 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
     path('',views.index, name='index'),
-    path('login',views.loginpage,name='loginpage'),
+    path('login/',views.loginpage,name='loginpage'),
     path('jobseeker',views.jsregpage,name='jsregpage'),
     path('recruiter',views.rregpage,name='rregpage'),
     path('check_username/', views.check_username, name='check_username'),
@@ -24,8 +25,20 @@ urlpatterns = [
     path('qualificationdelete/<int:id>/', views.qualificationdelete,name='qualificationdelete'),
     path('qualificationupdate/<int:id>/', views.qualificationupdate,name='qualificationupdate'),
     path('managejobs/<int:id>/',views.managejobs,name='managejobs'),
-    path('delete/<int:id>/',views.deletejob,name='deletejob'),
+    path('deletejob/<int:id>/',views.deletejob,name='deletejob'),
+    path('changestatus/<int:id>/',views.changestatus,name='changestatus'),
+    path('editjob/<int:id>/',views.editjob,name='editjob'),
+    path('editprofile/<int:id>/',views.editemployeerprofile,name='editemployeerprofile'),
+
+
+#Moderator Page URLS
+
+    path('employerslist', views.employerslist, name='employerslist'),
+    path('jobseekerslist', views.jobseekerslist, name='jobseekerslist'),
+
+
 
 #Jobseeker Page Urls
     path('editprofile', views.editprofile, name='editprofile'),
     ]
+ 

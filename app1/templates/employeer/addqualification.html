@@ -63,6 +63,7 @@
                         <th>Qualification</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>Change Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,16 +71,21 @@
                    {% for i in pos %}
                     <tr>
                         <td>{{i.qualification_name}}</td>
-                        <td>{% if 'i.status==0' %}
+                        <td>{% if i.status == 0 %}
                                 <span class="badge bg-danger">Inactive</span>
                             {% else %}
                                 <span class="badge bg-success">Active</span>
-                            {% endif%}
+                            {% endif %}
                         </td>
                         <td>
                             <a  class="btn btn-danger" href="{% url 'qualificationdelete' i.quali_id %}">Delete</a>     
                             <a  class="btn btn-success" href ="{% url 'qualificationupdate' i.quali_id %}">Edit</a>
+                            
                         </td>
+                        <td>
+                            <a  class="btn btn-info" href ="{% url 'changestatus' i.quali_id %}">Activate/Deactivate</a>
+                        </td>
+                        
                     </tr>
                     {% endfor %}
                 

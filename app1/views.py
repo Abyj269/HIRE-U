@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from app1.models import Jobseeker,Employeer,User,Qualifications
+from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile
 from django.contrib import messages
 from app1.models import Jobdetails,Qualifications
 from django.views import generic
@@ -16,8 +16,8 @@ def index(request):
     return render(request,"home.html")
 
 def loginpage(request):
-    if request.user.is_authenticated:
-        return redirect('loginpage')
+    # if request.user.is_authenticated:
+    #     return redirect('loginpage')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -30,6 +30,9 @@ def loginpage(request):
         elif user is not None and user.role == 'JOBSEEKER':
             login(request, user)
             return redirect('candidatepage') 
+        elif user is not None and user.role == 'MODERATOR':
+            login(request, user)
+            return redirect('adminpage') 
         else:
              messages.error(request,"Invalid Credentials" )
              return redirect('loginpage')
@@ -135,14 +138,17 @@ def postjob(request):
         messages.success(request,"Job is Successfully Posted" )
         return redirect('postjob')
     else:
-        pos = Qualifications.objects.all
+        pos = Qualifications.objects.all()
+        current_value = request.user
+        user_id=current_value.id
         context ={
         'pos': pos,
+        'user_id':user_id
         }
         return render(request,'employeer/postjob.html',context)
 
 
-    # Job Post Seeting and Add Qualification
+# Job Post Seeting and Add Qualification
 
 def addqualification(request,id):
     if request.user.is_authenticated:
@@ -185,6 +191,8 @@ def qualificationupdate(request,id):
             'detail':quali,'current_value':current_value
     })
 
+# Manage job ,Delete Job ,Update Job
+
 
 def deletejob(request,id):
         jobs = Jobdetails.objects.filter(job_id=id)
@@ -202,7 +210,81 @@ def managejobs(request ,id):
     return redirect('loginpage')
 
 
+@login_required(login_url='/login')
+def editjob(request,id):
+    jb = Jobdetails.objects.get(pk=id)
+    idvalue= request.user
+    allqualifications = Qualifications.objects.filter(cmp_id_id=idvalue)
+    if request.method == 'POST':
+        jobtitle= request.POST.get('job_title')
+        jobdescription = request.POST.get('job_description')
+        email = request.POST.get('contact_email')
+        jobtype = request.POST.get('jobtype')
+        specialisation= request.POST.get('specialisation')
+        experience = request.POST.get('experience')
+        salary = request.POST.get('salary')
+        vaccancies = request.POST.get('vaccancies')
+        qualification=request.POST.get('qualification')
+        lastdate = request.POST.get('lastdate')
+        Jobdetails.objects.filter(job_id=id).update(
+            job_title=jobtitle,
+            job_description=jobdescription,
+            contact_email=email,
+            job_type=jobtype,
+            specialisation=specialisation,
+            experience=experience,
+            expected_salary=salary,
+            vacancies=vaccancies,
+            qualification=qualification,
+            lastdate=lastdate,)
+        value = jb.cmp_id_id
+        return redirect(reverse('managejobs',args=[value]))
+    else:  
 
+        jobtitle = jb.job_title
+        jobdescription = jb.job_description
+        email = jb.contact_email
+        jobtype = jb.job_type
+        specialisation=jb.specialisation
+        experience=jb.experience
+        salary=jb.expected_salary
+        vaccancies=jb.vacancies
+        qualification=jb.qualification
+        lastdate=jb.lastdate
+
+        context={
+            'detail':jb,
+            'jobtitle': jobtitle,
+            'jobdescription':jobdescription,
+            'email':email,
+            'jobtype':jobtype,
+            'specialisation':specialisation,
+            'experience':experience,
+            'salary':salary,
+            'vaccancies':vaccancies,
+            'qualification':qualification,
+            'lastdate':lastdate,
+            'qualificationdetails':allqualifications
+        }
+        return render(request,'employeer/editjob.html',context)
+
+# Change Status
+def changestatus(request,id):
+    quali = Qualifications.objects.get(quali_id=id)
+    status_value = quali.status
+    if status_value == 0:
+        quali.status=1
+        quali.save()
+    else:
+        quali.status=0
+        quali.save()
+        
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+   
 
 
 # class QualificationDelete(generic.DeleteView):
@@ -210,7 +292,59 @@ def managejobs(request ,id):
 #     template_name= 'addqualifications.html'
 #     success_url=reverse_lazy('employeer/addqualifications/<int:id>')
 
-   
+def editemployeerprofile(request,id):
+    if request.user.is_authenticated:
+        details = EmployeerProfile.objects.get(user_id=id)
+        if request.method == 'POST':
+            company_name= request.POST.get('Company-Name')
+            office_location = request.POST.get('Office-Location')
+            address = request.POST.get('Address')
+            pincode = request.POST.get('Pincode')
+            website_url= request.POST.get('Website-URL')
+            phone_number = request.POST.get('Phoneno')
+            company_logo = request.FILES.get('logo')
+
+            details.company_name = company_name
+            details.office_location = office_location
+            details.address = address
+            details.pincode = pincode
+            details.website_url = website_url
+            details.phone_number = phone_number
+            if details.company_logo and company_logo:
+                    details.company_logo.delete()
+            if company_logo:
+                details.company_logo = company_logo
+                details.save()
+            # EmployeerProfile.objects.filter(user_id = id).update(
+            #     company_name=company_name,
+            #     office_location=office_location,
+            #     address=address,
+            #     pincode=pincode,
+            #     website_url=website_url,
+            #     phone_number=phone_number,
+            #     company_logo=company_logo,
+            #     )
+            return redirect('employeerpage')
+        else: 
+            company_name= details.company_name
+            office_location = details.office_location
+            address = details.address
+            pincode = details.pincode
+            website_url=details.website_url
+            phone_number = details.phone_number
+            company_logo= details.company_logo
+            context={
+                "company_name":company_name,
+                "office_location":office_location,
+                "address":address,
+                "pincode":pincode,
+                "website_url":website_url,
+                "phone_number":phone_number,
+                "company_logo":company_logo,
+            }
+            return render(request,'employeer/editprofile.html',context)
+
+    return redirect('loginpage')
 
 
 
@@ -230,7 +364,7 @@ def editprofile(request):
 #To render different User Home pages
 
 def adminpage(request):
-    return render(request,'admin.html')
+    return render(request,'moderator/admin.html')
 
 
 def candidatepage(request):
@@ -240,5 +374,35 @@ def candidatepage(request):
 
 @login_required(login_url='/login')
 def employeerpage(request):
-    return render(request,'employeer/home.html')
 
+    id = request.user
+    postedjobcount = Jobdetails.objects.filter(cmp_id_id=id).count()
+    context={
+    'postedjobcount':postedjobcount
+    }
+
+    return render(request,'employeer/home.html',context)
+
+
+
+
+
+# Admin Pages
+
+
+   
+    
+
+def employerslist(request):
+    employees = User.objects.filter(role="EMPLOYEER")
+    context={
+        "employees":employees
+    }
+    return render(request,'moderator/employerslist.html',context) 
+
+def jobseekerslist(request):
+    seekers = User.objects.filter(role="JOBSEEKER")
+    context={
+        "seekers":seekers
+    }
+    return render(request,'moderator/jobseekerslist.html',context) 

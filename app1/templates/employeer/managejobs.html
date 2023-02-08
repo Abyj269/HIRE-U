@@ -26,7 +26,6 @@
                 <thead>
                     <tr>
                         <th>Job Name</th>
-                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -35,15 +34,10 @@
                    {% for i in pos %}
                     <tr>
                         <td>{{i.job_title}}</td>
-                        <td>{% if 'i.status==0' %}
-                                <span class="badge bg-danger">Inactive</span>
-                            {% else %}
-                                <span class="badge bg-success">Active</span>
-                            {% endif%}
-                        </td>
                         <td>
                             <a  class="btn btn-danger" href="{% url 'deletejob' i.job_id %}">Delete</a>     
-                            <a  class="btn btn-success" href ="{}">Edit</a>
+                            <a  class="btn btn-success" href ="{% url 'editjob' i.job_id %}">Edit</a>
+                            <a  class="btn btn-info" href ="">Preview</a>
                         </td>
                     </tr>
                     {% endfor %}

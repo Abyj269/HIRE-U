@@ -1,0 +1,61 @@
+{% extends 'moderator\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <h3>Admin Dashboard</h3>
+</div>
+<section class="section">
+    <div class="row mb-2">
+        <div class="col-12 col-md-3">
+            <div class="card card-statistic">
+                <div class="card-body p-0">
+                    <div class="d-flex flex-column">
+                        <div class='px-3 py-3 d-flex justify-content-between'>
+                            <h3 class='card-title'>Employeers</h3>
+                            <div class="card-right d-flex align-items-center">
+                                <p>300</p>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="canvas1" style="height:100px !important"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="card card-statistic">
+                <div class="card-body p-0">
+                    <div class="d-flex flex-column">
+                        <div class='px-3 py-3 d-flex justify-content-between'>
+                            <h3 class='card-title'>Jobseekers</h3>
+                            <div class="card-right d-flex align-items-center">
+                                <p>200</p>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="canvas2" style="height:100px !important"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3">
+            <div class="card card-statistic">
+                <div class="card-body p-0">
+                    <div class="d-flex flex-column">
+                        <div class='px-3 py-3 d-flex justify-content-between'>
+                            <h3 class='card-title'>Visitors Count</h3>
+                            <div class="card-right d-flex align-items-center">
+                                <p>200</p>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="canvas2" style="height:100px !important"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

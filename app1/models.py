@@ -1,5 +1,10 @@
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import re
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 
@@ -8,6 +13,7 @@ class User(AbstractUser):
         ADMIN = "ADMIN", "Admin"
         JOBSEEKER = "JOBSEEKER", "jobseeker"
         EMPLOYEER = "EMPLOYEER", "employeer"
+        MODERATOR = "MODERATOR", "moderator"
 
     base_role = Role.ADMIN
     role = models.CharField(max_length=50, choices=Role.choices)
@@ -35,15 +41,15 @@ class Jobseeker(User):
         return "Only for students"
 
 
-# @receiver(post_save, sender=Jobseeker)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created and instance.role == "JOBSEEKER":
-#         JobseekerProfile.objects.create(user=instance)
+@receiver(post_save, sender=Jobseeker)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created and instance.role == "JOBSEEKER":
+        JobseekerProfile.objects.create(user=instance)
 
 
-# class JobseekerProfile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     jobseeker_id = models.IntegerField(null=True, blank=True)
+class JobseekerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    jobseeker_id = models.IntegerField(null=True, blank=True)
 
 
 class EmployeerManager(BaseUserManager):
@@ -64,17 +70,31 @@ class Employeer(User):
         return 
 
 
-# class EmployeerProfile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     employeer_id = models.IntegerField(null=True, blank=True)
+
+def validate_phone_number(value):
+    if not re.match(r'^\d{10}$', value):
+        raise ValidationError(_('Invalid phone number format'))
+
+class EmployeerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # employeer_id = models.IntegerField(null=True, blank=True)
+    company_name = models.CharField(null=True,blank=True,max_length=100)
+    office_location = models.CharField(null=True,blank=True,max_length=100)
+    address = models.CharField(max_length=255,null=True,blank=True)
+    pincode = models.IntegerField(blank=True, null=True)
+    website_url = models.URLField(blank=True, null=True)
+    phone_number = models.CharField(blank=True, null=True,max_length=15,validators=[validate_phone_number])
+    company_logo = models.ImageField(null=True,blank=True,upload_to='images/')
+
+    def __str__(self):
+        return str(self.user)
 
 
-# @receiver(post_save, sender=Employeer)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created and instance.role == "EMPLOYEER":
-#         EmployeerProfile.objects.create(user=instance)
-
-
+@receiver(post_save, sender=Employeer)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created and instance.role == "EMPLOYEER":
+        EmployeerProfile.objects.create(user=instance)
+        
 class Jobdetails(models.Model):
     job_id = models.AutoField(primary_key=True)
     job_title = models.CharField(max_length=100)

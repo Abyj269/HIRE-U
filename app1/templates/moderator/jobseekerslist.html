@@ -1,0 +1,63 @@
+{% extends 'moderator\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Jobseekers List</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Users</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Jobseekers List</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Jobseekers Details</h4>
+        </div>
+        
+        <div class="card-body">
+          
+            <table class='table table-bordered' id="table1">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if seekers %}
+                    {% for i in seekers %}
+                    <tr>
+                        <td>{{i.username}}</td>
+                        <td>{{i.email}}</td>
+                           
+                        <td><a  class="btn btn-success" href="">View</a></td>
+                    
+                        
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+           
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
