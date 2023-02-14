@@ -1,0 +1,85 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <h3>JOB  DETAILS</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'managejobs' user.id %}">Jobsettings</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Manage Jobs</li>
+                    <li class="breadcrumb-item active" aria-current="page">Preview Jobs</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+        <div class="container">
+            <div class="row ">
+                <div class="col-lg-8 card">
+                    <div class="d-flex align-items-center mb-2 card-body">
+                        <img class="card-img img-fluid" src="{{c_logo.url}}" alt="" style="width: 80px; height: 80px;">
+                        <div class="text-center">
+                            <h3 class="mb-3 me-4">{{job_title}}</h3>
+                            <span class="me-3"><i data-feather="map-pin" width="20"></i> {{location}}</span>
+                            <span class="text-truncate me-3"><i data-feather="clock" width="20"></i>{{type}}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 card-body">
+                        <h4 class="mb-3">Job Description</h4>
+                        <p>{{description}}</p>
+                        <!-- <h4 class="mb-3">Responsibility</h4>
+                        <p>Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
+                        </ul> -->
+                        <!-- <h4 class="mb-3">Qualifications</h4>
+                        <p>Magna et elitr diam sed lorem. Diam diam stet erat no est est. Accusam sed lorem stet voluptua sit sit at stet consetetur, takimata at diam kasd gubergren elitr dolor</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Dolor justo tempor duo ipsum accusam</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Elitr stet dolor vero clita labore gubergren</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Rebum vero dolores dolores elitr</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Est voluptua et sanctus at sanctus erat</li>
+                            <li><i class="fa fa-angle-right text-primary me-2"></i>Diam diam stet erat no est est</li>
+                        </ul> -->
+                    </div>
+    
+                  
+                </div>
+    
+                <div class="col-lg-4">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h4 class="mb-4">Job Summary</h4>
+                          
+                            <p><i data-feather="chevron-right" width="20"></i>Vacancies: {{vaccancies}} Positions</p>
+                            <p><i data-feather="chevron-right" width="20"></i>Job Nature: {{type}}</p>
+                            <p><i data-feather="chevron-right" width="20"></i>Expected Salary: {{salary}}</p>
+                            <p><i data-feather="chevron-right" width="20"></i>Location: {{location}}</p>
+                            <p class="mb-3"><i data-feather="chevron-right" width="20"></i>Last Date: {{lastdate}} </p>
+                            <a href="" class="btn btn-success col-12">Apply</a>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+  
+
+
+    
+
+
+</div>
+{% endblock %}

@@ -85,16 +85,28 @@ class EmployeerProfile(models.Model):
     website_url = models.URLField(blank=True, null=True)
     phone_number = models.CharField(blank=True, null=True,max_length=15,validators=[validate_phone_number])
     company_logo = models.ImageField(null=True,blank=True,upload_to='images/')
+    
+    
 
     def __str__(self):
         return str(self.user)
+    
 
+
+
+class Verificationdetails(models.Model):
+    user = models.OneToOneField(User,default=None,on_delete=models.CASCADE)
+    buisnesslicence=models.ImageField(null=True,blank=True,upload_to='images/')
+    proof_type = models.CharField(null=True,blank=True,max_length=100)
+    proof = models.ImageField(null=True,blank=True,upload_to='images/')
+    isverified=models.BooleanField('isverified',default=0)
 
 @receiver(post_save, sender=Employeer)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile_and_verification_details(sender, instance, created, **kwargs):
     if created and instance.role == "EMPLOYEER":
         EmployeerProfile.objects.create(user=instance)
-        
+        Verificationdetails.objects.create(user=instance)
+
 class Jobdetails(models.Model):
     job_id = models.AutoField(primary_key=True)
     job_title = models.CharField(max_length=100)
@@ -123,5 +135,10 @@ class Qualifications(models.Model):
 @property
 def id(self):
     return self.cmp_id.id
+
+
+
+
+
     
 

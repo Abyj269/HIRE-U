@@ -26,17 +26,23 @@ urlpatterns = [
     path('qualificationupdate/<int:id>/', views.qualificationupdate,name='qualificationupdate'),
     path('managejobs/<int:id>/',views.managejobs,name='managejobs'),
     path('deletejob/<int:id>/',views.deletejob,name='deletejob'),
-    path('changestatus/<int:id>/',views.changestatus,name='changestatus'),
     path('editjob/<int:id>/',views.editjob,name='editjob'),
+    path('previewjob/<int:id>/',views.previewjob,name='previewjob'),
+    path('jobdetails/<int:id>/',views.jobdetails,name='jobdetails'),
+
+    path('changestatus/<int:id>/',views.changestatus,name='changestatus'),
+
     path('editprofile/<int:id>/',views.editemployeerprofile,name='editemployeerprofile'),
+    path('profileverify/',views.profileverify,name='profileverify'),
 
 
 #Moderator Page URLS
 
     path('employerslist', views.employerslist, name='employerslist'),
     path('jobseekerslist', views.jobseekerslist, name='jobseekerslist'),
-
-
+    path('employerdetails/<int:id>/', views.employerdetails, name='employerdetails'),
+    path('accept/<int:id>/', views.accept, name='accept'),
+    path('reject/<int:id>/', views.reject, name='reject'),
 
 #Jobseeker Page Urls
     path('editprofile', views.editprofile, name='editprofile'),

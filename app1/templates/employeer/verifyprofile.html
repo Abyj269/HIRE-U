@@ -1,0 +1,72 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Verification</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'editemployeerprofile' user.id %}">Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Verify Profile</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Recruiter Profile Verification</h4>
+        </div>
+        
+        <div class="card-body">
+            {% for message in messages %}
+            <div class="alert {{ message.tags}} alert-dismissible show fade">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            <form id="verifyprofile" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group mb-3">
+                            <label for="buisness-license" class="form-label">Buisness-license</label>
+                            <input type="file" class="form-control" id="buisness-license" name="buisness-license" >
+                        </div>
+
+                    </div>
+                   
+                    <div class="row">
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="recruiter-id"  class="form-label">Recruiter Proof Type</label>
+                                <fieldset class="form-group">
+                                    <select class="form-select" id="basicSelect" name="recruiter-id">
+                                        <option >--Select--</option>
+                                        <option >Aadhar Card</option>
+                                        <option >Voters Card</option>
+                                        <option >Passport</option>
+                                    </select>
+                                </fieldset>    
+                                
+                            </div> 
+                            <div class="form-group col-md-6 mb-4">
+                                <label for="fileupload"  class="form-label">Upload File</label>
+                                <input type="file" class="form-control" id="fileupload" name="fileupload" >    
+                            </div>
+     
+                    </div>
+                    
+                </div>
+                <button class="btn btn-primary" type="submit">Verify Profile</button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

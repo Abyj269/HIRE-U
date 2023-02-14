@@ -37,7 +37,7 @@
                         <td>
                             <a  class="btn btn-danger" href="{% url 'deletejob' i.job_id %}">Delete</a>     
                             <a  class="btn btn-success" href ="{% url 'editjob' i.job_id %}">Edit</a>
-                            <a  class="btn btn-info" href ="">Preview</a>
+                            <a  class="btn btn-info" href ="{% url 'previewjob' i.job_id %}">Preview</a>
                         </td>
                     </tr>
                     {% endfor %}

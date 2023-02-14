@@ -1,0 +1,55 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Job Preview</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'managejobs' user.id %}">Jobsettings</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Manage Jobs</li>
+                    <li class="breadcrumb-item active" aria-current="page">Preview Jobs</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+    
+    <div class="row">
+        <div class="col-xl-6 col-sm-6 col-12">
+            <div class="card bg-lighten-1">
+                <div class="card-content">
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 col-md-12 d-flex align-items-center justify-content-center p-1">
+                            <img src="{{c_logo.url}}" class="card-img img-fluid" alt="" style="width:100px">
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="card-body">
+                                <h4 class="card-title white">{{job_title}}</h4>
+                                <p class="card-text white">{{type}}</p>
+                                <a  class="btn btn-success" href ="{% url 'jobdetails' id %}">Preview</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        
+
+
+
+    </div>
+   
+    
+
+
+
+    
+</div>
+{% endblock %}

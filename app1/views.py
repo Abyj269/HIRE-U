@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile
+from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile
 from django.contrib import messages
 from app1.models import Jobdetails,Qualifications
 from django.views import generic
@@ -303,27 +303,20 @@ def editemployeerprofile(request,id):
             website_url= request.POST.get('Website-URL')
             phone_number = request.POST.get('Phoneno')
             company_logo = request.FILES.get('logo')
-
-            details.company_name = company_name
-            details.office_location = office_location
-            details.address = address
-            details.pincode = pincode
-            details.website_url = website_url
-            details.phone_number = phone_number
+            EmployeerProfile.objects.filter(user_id=id).update(
+            company_name = company_name,
+            office_location = office_location,
+            address = address,
+            pincode = pincode,
+            website_url = website_url,
+            phone_number = phone_number,
+            )
             if details.company_logo and company_logo:
                     details.company_logo.delete()
             if company_logo:
                 details.company_logo = company_logo
                 details.save()
-            # EmployeerProfile.objects.filter(user_id = id).update(
-            #     company_name=company_name,
-            #     office_location=office_location,
-            #     address=address,
-            #     pincode=pincode,
-            #     website_url=website_url,
-            #     phone_number=phone_number,
-            #     company_logo=company_logo,
-            #     )
+
             return redirect('employeerpage')
         else: 
             company_name= details.company_name
@@ -347,6 +340,102 @@ def editemployeerprofile(request,id):
     return redirect('loginpage')
 
 
+def previewjob(request,id):
+    if request.user.is_authenticated:
+      jobdetails = Jobdetails.objects.get(job_id=id)  
+      userid = request.user 
+      details= EmployeerProfile.objects.get(user_id=userid)
+
+      jobtitle=jobdetails.job_title
+      clogo = details.company_logo
+      type= jobdetails.job_type
+      jobid = jobdetails.job_id
+      context={
+          "job_title":jobtitle,
+          "c_logo":clogo,
+          "type":type,
+          "id":jobid,
+      }
+
+
+      return render(request,'employeer/jobpreview.html',context)
+
+    return redirect('loginpage')
+
+
+def jobdetails(request,id):
+    if request.user.is_authenticated:
+
+        jobdetails = Jobdetails.objects.get(job_id=id)  
+        userid = request.user 
+        details= EmployeerProfile.objects.get(user_id=userid)
+        jobtitle=jobdetails.job_title
+        clogo = details.company_logo
+        type= jobdetails.job_type
+        description = jobdetails.job_description
+        lastdate=jobdetails.lastdate
+        specialisation = jobdetails.specialisation
+        location = details.office_location
+        salary = jobdetails.expected_salary
+        experience= jobdetails.experience
+        vaccancies = jobdetails.vacancies
+        qualification = jobdetails.qualification
+       
+        context={
+            "job_title":jobtitle,
+            "c_logo":clogo,
+            "type":type,
+            "description":description,
+            "lastdate":lastdate,
+            "specialisation":specialisation,
+            "location":location,
+            "salary":salary,
+            "experience":experience,
+            "vaccancies":vaccancies,
+            "qualification":qualification,
+        }
+
+
+
+        return render(request,'employeer/jobpreviewdetail.html',context)
+    return redirect('loginpage')
+
+def profileverify(request):
+     if request.user.is_authenticated:
+        if request.method == 'POST':
+            userid=request.user.id  
+            # # all=Verificationdetails.objects.all()
+            # # for i in all:
+            # #  if userid == i.user_id:
+            # #     messages.warning(request,"Verification Details is Already Added" )
+            #     return redirect(request.META['HTTP_REFERER'])
+            bc=Verificationdetails.objects.get(user_id=userid)
+            buisness_license = request.FILES.get('buisness-license')
+            prooftype = request.POST.get('recruiter-id')
+            proof = request.FILES.get('fileupload')
+
+            if bc.buisnesslicence and buisness_license:
+                bc.buisnesslicence.delete()
+            if buisness_license:
+                bc.buisnesslicence = buisness_license
+                bc.save()
+
+
+            if bc.proof and proof:
+                bc.proof.delete()
+            if proof:
+                bc.proof = proof
+                bc.save()
+           
+            
+            return redirect('employeerpage')
+             
+        else:
+            return render(request,'employeer/verifyprofile.html')
+     return redirect('loginpage')
+
+
+
 
 
 
@@ -364,7 +453,15 @@ def editprofile(request):
 #To render different User Home pages
 
 def adminpage(request):
-    return render(request,'moderator/admin.html')
+
+    jobseekercount = JobseekerProfile.objects.all().count()
+    employeercount = EmployeerProfile.objects.all().count()
+    context={
+    'employeercount':employeercount,
+    'jobseekercount':jobseekercount
+    }
+
+    return render(request,'moderator/admin.html',context)
 
 
 def candidatepage(request):
@@ -390,13 +487,10 @@ def employeerpage(request):
 # Admin Pages
 
 
-   
-    
-
 def employerslist(request):
-    employees = User.objects.filter(role="EMPLOYEER")
+    employees = User.objects.filter(role="EMPLOYEER").select_related('employeerprofile','verificationdetails')
     context={
-        "employees":employees
+        "employees":employees,
     }
     return render(request,'moderator/employerslist.html',context) 
 
@@ -406,3 +500,53 @@ def jobseekerslist(request):
         "seekers":seekers
     }
     return render(request,'moderator/jobseekerslist.html',context) 
+
+
+def employerdetails(request,id):
+    if request.user.is_authenticated:
+
+        profiledetails = EmployeerProfile.objects.get(user_id=id)
+        verificationdetails = Verificationdetails.objects.get(user_id=id)
+        userdetails = User.objects.get(id=id)
+        context = {
+           
+            'company_name':profiledetails.company_name,
+            'officelocation':profiledetails.office_location,
+            'phonenumber':profiledetails.phone_number,
+            'address':profiledetails.address,
+            'pincode':profiledetails.pincode,
+            'websiteurl':profiledetails.website_url,
+            'prooftype':verificationdetails.proof_type,
+            'proof':verificationdetails.proof,
+            'buisnesslicense':verificationdetails.buisnesslicence,
+            'email':userdetails.email,
+            'username':userdetails.username,
+            'companylogo':profiledetails.company_logo,
+            'status':verificationdetails.isverified,
+            'id':userdetails.id
+        }
+
+
+        return render(request,'moderator/employeerdetails.html',context)
+    return redirect('loginpage')
+
+
+def accept(request,id):
+    xy = Verificationdetails.objects.get(user_id=id)
+    status_value = xy.isverified
+    if status_value == 0:
+        xy.isverified=1
+        xy.save()
+    
+    return redirect(request.META.get('HTTP_REFERER'))
+
+def reject(request,id):
+    xy = Verificationdetails.objects.get(user_id=id)
+    status_value = xy.isverified
+    if status_value == 1:
+        xy.isverified=0
+        xy.save()
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+

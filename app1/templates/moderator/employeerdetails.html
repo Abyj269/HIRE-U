@@ -1,0 +1,110 @@
+{% extends 'moderator\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Employeer Details</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="">Users</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Jobseekers List</li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+
+    <div class="container">
+        <div class="row ">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="mb-2 card-body row">
+                    
+                        <div class="text-center">
+                            <img class="card-img img-fluid" src="{{companylogo.url}}" alt="" style="width: 100px; height: 100px;">
+                            <h3 class="mb-3 me-4">{{company_name}}</h3>
+                            
+                            <div class="text-center mb-5">
+                                <img id="preview-image" src="{{buisnesslicense.url }}" style="display:none">
+                                <img id="preview-image2" src="{{proof.url }}" style="display:none">
+                                <script>
+                                    function showBuisnessLicense() {
+                                        var preview = window.open("", "Image preview", "width=800,height=600");
+                                        preview.document.write('<img src="' + document.getElementById("preview-image").src + '">');
+                                    }
+
+                                    function showProof() {
+                                        var preview = window.open("", "Image preview", "width=800,height=600");
+                                        preview.document.write('<img src="' + document.getElementById("preview-image2").src + '">');
+                                    }
+
+                                </script>
+                                <button id="preview-button" onclick="showBuisnessLicense()"  class="btn btn-primary">Buisness License</button>
+                                <button id="preview-button2" onclick="showProof()" class="btn btn-primary">Proof</button>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+             
+
+              
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="mb-4">Job Summary</h4>
+                      
+                        <p><i data-feather="chevron-right" width="20"></i>Address: {{address}}</p>
+                        <p><i data-feather="chevron-right" width="20"></i>Location: {{officelocation}}</p>
+                        <p><i data-feather="chevron-right" width="20"></i>Pincode: {{pincode}}</p>
+                        <p><i data-feather="chevron-right" width="20"></i>Phone Number: {{phonenumber}}</p>
+                        <p><i data-feather="chevron-right" width="20"></i>Status: 
+                            {% if status == 0 %}
+                            <span>Inactive</span>
+                            {% else %}
+                            <span>Active</span>
+                            {% endif %}
+                        </p>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+           
+                       
+        </div>
+           
+             
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="text-center mb-2 mt-3">
+                    <a href="{% url 'accept' id %}" class="btn btn-success col-lg-4">Accept</a>
+                    <a href="{% url 'reject' id %}" class="btn btn-danger col-lg-4">Reject</a>
+                </div>
+            </div>
+        </div>    
+
+
+
+    </div>
+        
+
+
+          
+</div>
+<script>
+   
+</script>
+
+
+
+{% endblock %}
