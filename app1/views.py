@@ -450,6 +450,12 @@ def editprofile(request):
 
 
 
+
+
+
+
+
+
 #To render different User Home pages
 
 def adminpage(request):
@@ -466,7 +472,13 @@ def adminpage(request):
 
 def candidatepage(request):
     if request.user.is_authenticated:
-        return render(request,'jobseeker/profile.html')
+
+        jobdetails = Jobdetails.objects.all()
+        context={
+            "jobdetails":jobdetails
+        }
+
+        return render(request,'jobseeker/profile.html',context)
     return redirect('loginpage')
 
 @login_required(login_url='/login')
