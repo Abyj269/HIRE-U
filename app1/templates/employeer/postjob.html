@@ -1,7 +1,7 @@
 {% extends 'employeer\layouts\base.html' %}
 {% block content %}
 <div class="page-title">
-    <div class="row">
+    <div class="row mb-3">
         <div class="col-12 col-md-6 order-md-1 order-las">
             <h3>Post New Job</h3>
         </div>
@@ -17,7 +17,7 @@
 
     </div>
 
-
+    {% if  verified == 1 %}
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Add Job</h4>
@@ -134,6 +134,12 @@
             </form>
         </div>
     </div>
+    {% else %}
+        <div class="alert alert-primary">
+            <h4 class="alert-heading">Cannot Post job</h4>
+            <p>Sorry,Your account is not verified by moderator,Please wait until moderator verifies you</p>
+        </div>
+    {% endif %}
 </div>
 
 

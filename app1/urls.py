@@ -25,6 +25,7 @@ urlpatterns = [
     path('qualificationdelete/<int:id>/', views.qualificationdelete,name='qualificationdelete'),
     path('qualificationupdate/<int:id>/', views.qualificationupdate,name='qualificationupdate'),
     path('managejobs/<int:id>/',views.managejobs,name='managejobs'),
+    
     path('deletejob/<int:id>/',views.deletejob,name='deletejob'),
     path('editjob/<int:id>/',views.editjob,name='editjob'),
     path('previewjob/<int:id>/',views.previewjob,name='previewjob'),
@@ -46,5 +47,6 @@ urlpatterns = [
 
 #Jobseeker Page Urls
     path('editprofile', views.editprofile, name='editprofile'),
+    path('joblisting', views.joblisting, name='joblisting'),
     ]
  

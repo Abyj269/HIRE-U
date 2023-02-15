@@ -110,6 +110,11 @@ def logout_view(request):
 #Employeer Views 
 @login_required(login_url='/login')
 def postjob(request):
+    
+
+    userid=request.user.id
+    vdetails = Verificationdetails.objects.get(user_id=userid)
+    value=vdetails.isverified
     if request.method == 'POST':
         jobtitle= request.POST.get('job_title')
         jobdescription = request.POST.get('job_description')
@@ -143,7 +148,9 @@ def postjob(request):
         user_id=current_value.id
         context ={
         'pos': pos,
-        'user_id':user_id
+        'user_id':user_id,
+        'verified':value,
+
         }
         return render(request,'employeer/postjob.html',context)
 
@@ -152,6 +159,10 @@ def postjob(request):
 
 def addqualification(request,id):
     if request.user.is_authenticated:
+        userid=request.user.id
+        vdetails = Verificationdetails.objects.get(user_id=userid)
+        value=vdetails.isverified
+
         if request.method == 'POST':
             quali =request.POST.get('qualification')
 
@@ -166,7 +177,8 @@ def addqualification(request,id):
         
         pos = Qualifications.objects.filter(cmp_id_id=id)
         context ={
-            'pos': pos
+            'pos': pos,
+            'value':value,
         }
         return render(request,'employeer/addqualification.html',context)
     return redirect('loginpage')
@@ -202,12 +214,26 @@ def deletejob(request,id):
 
 def managejobs(request ,id):
     if request.user.is_authenticated:
-        pos = Jobdetails.objects.filter(cmp_id_id=id)
-        context ={
-            'pos': pos
-        }
-        return render(request,'employeer/managejobs.html',context) 
+        if request.method =='POST':
+            searched = request.POST['searched']
+            jobs=Jobdetails.objects.filter(job_title__contains=searched)
+            context={
+                'searched':searched,
+                'jobs':jobs
+            }
+            return render(request,'employeer/searchjobs.html',context) 
+        
+        else:
+            pos = Jobdetails.objects.filter(cmp_id_id=id)
+            context ={
+                'pos': pos,
+                'id':id
+            }
+            return render(request,'employeer/managejobs.html',context) 
     return redirect('loginpage')
+
+
+
 
 
 @login_required(login_url='/login')
@@ -445,7 +471,21 @@ def editprofile(request):
     return render(request,'jobseeker/home.html')
 
 
+@login_required(login_url='/login')
+def candidatepage(request):
+    if request.user.is_authenticated:
+        return render(request,'jobseeker/home.html')
+    return redirect('loginpage')
 
+def joblisting(request):
+    if request.user.is_authenticated:
+        jobdetails = Jobdetails.objects.all()
+        context={
+            "jobdetails":jobdetails,
+            
+        }
+        return render(request,'jobseeker/jobs.html',context)
+    return redirect('loginpage')
 
 
 
@@ -461,25 +501,17 @@ def editprofile(request):
 def adminpage(request):
 
     jobseekercount = JobseekerProfile.objects.all().count()
+    actualcount=jobseekercount-1
     employeercount = EmployeerProfile.objects.all().count()
     context={
     'employeercount':employeercount,
-    'jobseekercount':jobseekercount
+    'jobseekercount':actualcount,
     }
 
     return render(request,'moderator/admin.html',context)
 
 
-def candidatepage(request):
-    if request.user.is_authenticated:
 
-        jobdetails = Jobdetails.objects.all()
-        context={
-            "jobdetails":jobdetails
-        }
-
-        return render(request,'jobseeker/profile.html',context)
-    return redirect('loginpage')
 
 @login_required(login_url='/login')
 def employeerpage(request):

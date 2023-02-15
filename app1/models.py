@@ -120,7 +120,7 @@ class Jobdetails(models.Model):
     vacancies = models.IntegerField(blank=True, null=True)
     lastdate =  models.DateField()
     cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
-
+    # cmp_profile = models.ForeignKey(EmployeerProfile,default=None,on_delete=models.CASCADE,related_name='job_details')
 
 class Qualifications(models.Model):
     quali_id = models.AutoField(primary_key=True) 

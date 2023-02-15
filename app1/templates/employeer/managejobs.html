@@ -21,7 +21,22 @@
         </div>
         
         <div class="card-body">
-          
+            <form method="post" action="">
+                {% csrf_token %}
+        
+            <div class="row mb-3 align-items-end">
+                
+                <div class="col-lg-8">
+                    <div class="input-group">
+                        <input class="form-control" type="search" aria-label="Search" placeholder="Search" name="searched">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="submit">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+           
             <table class='table table-bordered' id="table1">
                 <thead>
                     <tr>
