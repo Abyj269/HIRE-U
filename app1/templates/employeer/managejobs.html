@@ -21,17 +21,19 @@
         </div>
         
         <div class="card-body">
-            <form method="post" action="">
+            <form method="post" id="search-form" action="">
                 {% csrf_token %}
         
             <div class="row mb-3 align-items-end">
                 
                 <div class="col-lg-8">
                     <div class="input-group">
-                        <input class="form-control" type="search" aria-label="Search" placeholder="Search" name="searched">
+                        <input class="form-control" type="search" aria-label="Search" id="search_text" placeholder="Search" name="searched">
                         <div class="input-group-append">
-                            <button class="btn btn-secondary" type="submit">Search</button>
+                            <button class="btn btn-secondary" id="normalsearch" type="submit">Search</button>
                         </div>
+                        <button  type="button" id="search_button" class="btn btn-warning">Voice Search</button>
+                       
                     </div>
                 </div>
             </div>
@@ -65,4 +67,121 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    var voice = {
+  // (A) INIT SPEECH RECOGNITION
+  sform : null, // HTML SEARCH FORM
+  sfield : null, // HTML SEARCH FIELD
+  sbtn : null, // HTML VOICE SEARCH BUTTON
+  recog : null, // SPEECH RECOGNITION OBJECT
+  init : function () {
+    // (A1) GET HTML ELEMENTS
+    voice.sform = document.getElementById("search-form");
+    voice.sfield = document.getElementById("search_text");
+    voice.sbtn = document.getElementById("search_button");
+ 
+    // (A2) GET MICROPHONE ACCESS
+    navigator.mediaDevices.getUserMedia({ audio: true })
+    .then((stream) => {
+      // (A3) SPEECH RECOGNITION OBJECT + SETTINGS
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      voice.recog = new SpeechRecognition();
+      voice.recog.lang = "en-US";
+      voice.recog.continuous = false;
+      voice.recog.interimResults = false;
+ 
+      // (A4) POPUPLATE SEARCH FIELD ON SPEECH RECOGNITION
+      voice.recog.onresult = (evt) => {
+        let said = evt.results[0][0].transcript.toLowerCase();
+        voice.sfield.value = said;
+        // voice.sform.submit();
+        // OR RUN AN AJAX/FETCH SEARCH
+        voice.stop();
+        
+        var normalSearch = document.getElementById("normalsearch")
+        normalSearch.click()
+      };
+ 
+      // (A5) ON SPEECH RECOGNITION ERROR
+      voice.recog.onerror = (err) => { console.error(err); };
+ 
+      // (A6) READY!
+      voice.sbtn.disabled = false;
+      voice.stop();
+    })
+    .catch((err) => {
+      console.error(err);
+      voice.sbtn.value = "Please enable access and attach microphone.";
+    });
+  },
+ 
+  // (B) START SPEECH RECOGNITION
+  start : () => {
+    voice.recog.start();
+    voice.sbtn.onclick = voice.stop;
+    voice.sbtn.value = "Speak Now Or Click Again To Cancel";
+  },
+ 
+  // (C) STOP/CANCEL SPEECH RECOGNITION
+  stop : () => {
+    voice.recog.stop();
+    voice.sbtn.onclick = voice.start;
+    voice.sbtn.value = "Press To Speak";
+  }
+};
+window.addEventListener("DOMContentLoaded", voice.init); 
+
+
+
+// var isRecording = false;
+
+// // Start recording when the button is pressed
+// const startRecordingButton = document.getElementById("search_button");
+// startRecordingButton.addEventListener("click", startRecording);
+
+// const recognition = new webkitSpeechRecognition();
+// recognition.continuous = true;
+
+// const languageSelector = document.getElementById("language-selector");
+// recognition.lang = languageSelector.value;
+// languageSelector.addEventListener("change", (event) => {
+//   recognition.abort();
+//   setTimeout(() => {
+//     recognition.lang = event.target.value;
+//     recognition.start();
+//   }, 1000);  //We call recognition.start() in a timeout to make sure the abort() function is done
+// });
+
+// recognition.onresult = (event) => {
+//   for (let i = event.resultIndex; i < event.results.length; i++) {
+//     const transcript = event.results[i][0].transcript;
+//     if (event.results[i].isFinal) {
+//       if (isRecording==true) { console.log(transcript); document.getElementById("search_text").innerHTML = document.getElementById("search_text").innerHTML + "<p>" + transcript}
+//     }
+//   }
+// };
+
+// //Function for the button that toggles between transcribing or not transcribing speech
+// //(here called "recording" although strictly speaking the app keeps recording
+// //continuously
+// function startRecording() {
+//   if (isRecording == false) {
+//     isRecording = true
+//     document.getElementById("search_button").style.backgroundColor = 'Red';
+//   }else{
+//     isRecording = false
+//     document.getElementById("search_button").style.backgroundColor = 'Grey';
+//   }
+//   console.log(isRecording)
+// }
+
+// recognition.start();
+
+
+
+
+</script>
+
 {% endblock %}
