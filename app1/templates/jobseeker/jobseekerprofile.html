@@ -1,0 +1,301 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- Bootstrap Tags Input CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css">
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <!-- <h3>Software Engineer</h3> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="job_listing_area plus_padding">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="_dashboard_content bg-white rounded mb-4">
+                    <div class="job_details_header br-bottom py-3 px-3">
+                        <div class="single_jobs white-bg d-flex justify-content-between">
+                            <h4 class="mb-0 ft-medium fs-md"><i class="fa fa-user mr-1 theme-cl fs-sm"></i>My Profile</h4>	
+                        </div>
+                    </div>
+                    
+                    <div class="_dashboard_content_body py-3 px-3">
+                        <form class="row" enctype="multipart/form-data">
+                            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                <div class="custom-file avater_uploads">
+                                  <input type="file" class="custom-file-input" id="customFile" name="customFile">
+                                  <label class="custom-file-label" for="customFile"><i class="fa fa-user"></i></label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">First Name</label>
+                                            <input type="text" class="form-control rounded" value="" name="first_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Last Name</label>
+                                            <input type="text" class="form-control rounded" value="" name="last_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Phone</label>
+                                            <input type="text" class="form-control rounded" value="" name="phone">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Email</label>
+                                            <input type="email" class="form-control rounded" value="">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Job Type</label>
+                                            <select class="custom-select rounded">
+                                                <option>Choose Job Type</option>
+                                                <option>Full Time</option>
+                                                <option>Part Time</option>
+                                                <option>Freelance</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Job Category</label>
+                                            <select class="custom-select rounded">
+                                                <option>Choose Categories</option>
+                                                <option>IT & Software</option>
+                                                <option>Bank Services</option>
+                                                <option>Hospitals</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Experience</label>
+                                            <select class="custom-select rounded">
+                                                <option>Select Experience</option>
+                                                <option>Fresher</option>
+                                                <option>01</option>
+                                                <option>02</option>
+                                                <option>03</option>
+                                                <option>04</option>
+                                                <option>05</option>
+                                                <option>05</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Highest Qualification</label>
+                                            <input type="text" class="form-control rounded" value="" name="highestqualification">
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Current Salary</label>
+                                            <select class="custom-select rounded">
+                                                <option>10-20 K</option>
+                                                <option>20-30 K</option>
+                                                <option>30-40 K</option>
+                                                <option>40-50 K</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Expected Salary</label>
+                                            <select class="custom-select rounded">
+                                                <option>10-20 K</option>
+                                                <option>20-30 K</option>
+                                                <option>30-40 K</option>
+                                                <option>40-50 K</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Age</label>
+                                            <select class="custom-select rounded" name="age">
+                                                <option>Select Age</option>
+                                                <option>15</option>
+                                                <option>16</option>
+                                                <option>17</option>
+                                                <option>18</option>
+                                                <option>19</option>
+                                                <option>20</option>
+                                                <option>21</option>
+                                                <option>22</option>
+                                                <option>23</option>
+                                                <option>24</option>
+                                                <option>25</option>
+                                                <option>26</option>
+                                                <option>27</option>
+                                                <option>28+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Languages Known</label>
+                                            <input type="text" class="form-control rounded" name="tags" data-role="tagsinput"  placeholder="Ex. English,Hindi">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">About Yourself</label>
+                                            <textarea class="form-control with-light" name="aboutyourself"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-xl-12 col-lg-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-md ft-medium text-light rounded theme-bg">Save Changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>        
+                </div>
+            </div>
+
+
+            <div class="col-lg-12 col-md-12">
+                <div class="_dashboard_content bg-white rounded mb-4">
+                    <div class="_dashboard_content_header br-bottom py-3 px-3">
+                        <div class="_dashboard__header_flex">
+                            <h4 class="mb-0 ft-medium fs-md"><i class="ti-facebook mr-1 theme-cl fs-sm"></i>Social Accounts</h4>	
+                        </div>
+                    </div>
+                    
+                    <div class="_dashboard_content_body py-3 px-3">
+                        <form class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Linkedin</label>
+                                    <input type="text" class="form-control rounded" placeholder="https://www.linkedin.com/">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Github</label>
+                                    <input type="text" class="form-control rounded" placeholder="https://www.github.com/">
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-md ft-medium text-light rounded theme-bg">Save Changes</button>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="col-lg-12 col-md-12">
+                <div class="_dashboard_content bg-white rounded mb-4">
+                    <div class="_dashboard_content_header br-bottom py-3 px-3">
+                        <div class="_dashboard__header_flex">
+                            <h4 class="mb-0 ft-medium fs-md"><i class="fa fa-address-book mr-1 theme-cl fs-sm"></i>Contact Information</h4>	
+                        </div>
+                    </div>
+                    
+                    <div class="_dashboard_content_body py-3 px-3">
+                        <form class="row">	
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Country</label>
+                                    <!-- <select class="custom-select rounded">
+                                        <option>Australia</option>
+                                        <option>United States</option>
+                                        <option>United Kingdom</option>
+                                        <option>China</option>
+                                        <option>India</option>
+                                        <option>Pakistan</option>
+                                    </select> -->
+                                    <input type="text" class="form-control rounded"></input>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">State</label>
+                                    <!-- <select class="custom-select rounded">
+                                        <option>Madhya Pradesh</option>
+                                        <option>Punjab</option>
+                                        <option>Uttar Pradesh</option>
+                                        <option>Arudachal</option>
+                                        <option>Nepal</option>
+                                        <option>Afganistan</option>
+                                    </select> -->
+                                    <input type="text" class="form-control rounded"></input>
+
+                                </div>
+                            </div>
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Full Address</label>
+                                    <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
+                                </div>
+                            </div>
+                            <!-- <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Latitude</label>
+                                    <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12">
+                                <div class="form-group">
+                                    <label class="text-dark ft-medium">Longitude</label>
+                                    <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
+                                </div>
+                            </div> -->
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-md ft-medium text-light rounded theme-bg">Save Changes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>	
+    
+
+
+
+
+
+
+
+
+
+
+        </div>       
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+{% endblock %}

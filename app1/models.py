@@ -5,7 +5,8 @@ from django.dispatch import receiver
 import re
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+import datetime
+from taggit.managers import TaggableManager
 
 
 class User(AbstractUser):
@@ -49,7 +50,24 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 class JobseekerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    jobseeker_id = models.IntegerField(null=True, blank=True)
+    # jobseeker_id = models.IntegerField(null=True, blank=True)
+    first_name = models.CharField(null=True,blank=True,max_length=100)
+    last_name = models.CharField(null=True,blank=True,max_length=100)
+    phone_number = models.CharField(blank=True, null=True,max_length=15)
+    email=models.EmailField(blank=True, null=True,max_length=60)
+    highestqualification=models.CharField(blank=True, null=True,max_length=50)
+    age=models.IntegerField(blank=True, null=True)
+    languages=TaggableManager()
+    profile_photo = models.ImageField(null=True,blank=True,upload_to='images/')
+    aboutyourself = models.CharField(null=True,blank=True,max_length=600)
+    # full_address = models.CharField(max_length=255,null=True,blank=True)
+    # pincode = models.IntegerField(blank=True, null=True)
+    # website_url = models.URLField(blank=True, null=True)
+    
+
+    
+    def __str__(self):
+        return str(self.first_name)
 
 
 class EmployeerManager(BaseUserManager):
@@ -120,21 +138,35 @@ class Jobdetails(models.Model):
     vacancies = models.IntegerField(blank=True, null=True)
     lastdate =  models.DateField()
     cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
-    # cmp_profile = models.ForeignKey(EmployeerProfile,default=None,on_delete=models.CASCADE,related_name='job_details')
+    publisheddate = models.DateTimeField(default=datetime.date.today)
+    # cmp_profile = models.ForeignKey(EmployeerProfile,default=None,on_delete=models.CASCADE)
 
-class Qualifications(models.Model):
+class Qualifications(models.Model): 
     quali_id = models.AutoField(primary_key=True) 
-    qualification_name = models.CharField(max_length=100)
+    qualification_name = models.CharField(max_length=100,null=True,blank=True)
     cmp_id = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
     status=models.BooleanField('status',default=0)
     
     def __str__(self):
         return self.qualification_name
+    
+    # @property
+    # def id(self):
+    #  return self.cmp_id.id
+    
+
+class Skills(models.Model):
+    skill_id = models.AutoField(primary_key=True) 
+    skill_name = models.CharField(max_length=100,null=True,blank=True)
+    emp_profile = models.ForeignKey(User,default=None,on_delete=models.CASCADE)
+    status=models.BooleanField('status',default=0)
+    
+    def __str__(self):
+        return self.skill_name
 
 
-@property
-def id(self):
-    return self.cmp_id.id
+
+
 
 
 

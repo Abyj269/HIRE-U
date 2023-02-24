@@ -73,10 +73,14 @@
                                 <label for="specialisation" class="form-label">Specialisation</label>
                                 <fieldset class="form-group">
                                     <select class="form-select" id="basicSelect" name="specialisation">
-                                        <option>--Select--</option>
-                                        <option value="Cloud Computing">Cloud Computing</option>
-                                        <option value="Machine Learning">Machine Learning</option>
-                                        <option value="Blockchain Technology">Blockchain Technology</option>
+                                        <option >--Select--</option>
+                                        {% for i in skills %}
+                                                {% if i.emp_profile_id == user_id %}
+                                                    {% if i.status == 1 %}
+                                                        <option value='{{i.skill_id}}'>{{ i.skill_name }}</option> 
+                                                    {% endif %}
+                                                {% endif %}
+                                        {% endfor %}
                                     </select>
                                 </fieldset>       
                             </div>    
@@ -120,6 +124,8 @@
                             <div class="form-group col-md-6 mb-4">
                                 <label for="vaccancies" class="form-label">Vaccancies</label>
                                 <input type="number" class="form-control" name="vaccancies" id="vaccancies" placeholder="Enter number of vaccancies">
+                                <input type="hidden" class="form-control" name="va" id="vaccancies" value="{{user.id}}">
+
                             </div>
                             <div class="form-group col-md-6 mb-4">
                                 <label for="lastdate" class="form-label">Last date</label>

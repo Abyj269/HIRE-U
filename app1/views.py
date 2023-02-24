@@ -3,13 +3,15 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile
+from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
 from django.contrib import messages
-from app1.models import Jobdetails,Qualifications
+from app1.models import Jobdetails,Qualifications,User
 from django.views import generic
 from django.urls import reverse
 from .models import Qualifications
 from django.contrib.auth.decorators import login_required
+from taggit.models import Tag, TaggedItem
+
 
 
 def index(request):
@@ -110,8 +112,6 @@ def logout_view(request):
 #Employeer Views 
 @login_required(login_url='/login')
 def postjob(request):
-    
-
     userid=request.user.id
     vdetails = Verificationdetails.objects.get(user_id=userid)
     value=vdetails.isverified
@@ -126,6 +126,9 @@ def postjob(request):
         vaccancies = request.POST.get('vaccancies')
         qualification=request.POST.get('qualification')
         lastdate = request.POST.get('lastdate')
+        
+        
+
         postedjob= Jobdetails(
             job_title=jobtitle,
             job_description=jobdescription,
@@ -137,20 +140,27 @@ def postjob(request):
             vacancies=vaccancies,
             qualification=qualification,
             lastdate=lastdate,
+
+            
             )
-        postedjob.cmp_id=request.user    
+        postedjob.cmp_id=request.user
+
+        
+
+        
         postedjob.save()
         messages.success(request,"Job is Successfully Posted" )
         return redirect('postjob')
     else:
         pos = Qualifications.objects.all()
+        skills=Skills.objects.all()
         current_value = request.user
         user_id=current_value.id
         context ={
         'pos': pos,
         'user_id':user_id,
         'verified':value,
-
+        'skills':skills
         }
         return render(request,'employeer/postjob.html',context)
 
@@ -212,6 +222,64 @@ def deletejob(request,id):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
+
+
+# Job  Setting and Add Skills
+
+def addskills(request,id):
+    if request.user.is_authenticated:
+        userid=request.user.id
+        vdetails = Verificationdetails.objects.get(user_id=userid)
+        value=vdetails.isverified
+
+        if request.method == 'POST':
+            skill =request.POST.get('skills')
+            value =EmployeerProfile.objects.get(user_id=userid)
+            addedskills= Skills(
+                skill_name=skill
+                )
+            addedskills.emp_profile_id=userid
+            addedskills.save()
+            messages.success(request,"Skill is added" )
+            return redirect(request.META['HTTP_REFERER'])
+        
+        
+        pos = Skills.objects.filter(emp_profile_id=id)
+        context ={
+            'pos': pos,
+            'value':value,
+        }
+        return render(request,'employeer/addskill.html',context)
+    return redirect('loginpage')
+
+def skilldelete(request,id):
+        skill = Skills.objects.filter(skill_id=id)
+        skill.delete()
+        return redirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='/login')
+def skillupdate(request,id):
+    skill = Skills.objects.get(pk=id)
+    if request.method == 'POST':
+        value =request.POST.get('skills')
+        Skills.objects.filter(skill_id=id).update(skill_name=value)
+        value =skill.emp_profile_id
+        return redirect(reverse('addskills',args=[value]))
+    else:   
+             
+        current_value = skill.skill_name
+        return render(request,'employeer/editskill.html',{
+            'detail':skill,'current_value':current_value
+    })
+
+
+
+
+
+
+
+
+
 def managejobs(request ,id):
     if request.user.is_authenticated:
         pos = Jobdetails.objects.filter(cmp_id_id=id)
@@ -221,12 +289,10 @@ def managejobs(request ,id):
             context={
                 'searched':searched,
                 'jobs':jobs,
-                'pos':pos,
             }
             return render(request,'employeer/managejobs.html',context) 
         
         else:
-           
             context ={
                 'pos': pos,
                 'id':id
@@ -310,7 +376,17 @@ def changestatus(request,id):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-
+def changeskillstatus(request,id):
+    skill = Skills.objects.get(skill_id=id)
+    status_value = skill.status
+    if status_value == 0:
+        skill.status=1
+        skill.save()
+    else:
+        skill.status=0
+        skill.save()
+        
+    return redirect(request.META.get('HTTP_REFERER'))
 
    
 
@@ -366,6 +442,7 @@ def editemployeerprofile(request,id):
             return render(request,'employeer/editprofile.html',context)
 
     return redirect('loginpage')
+
 
 
 def previewjob(request,id):
@@ -469,8 +546,7 @@ def profileverify(request):
 
 # Jobseeker Views
 
-def editprofile(request):
-    return render(request,'jobseeker/home.html')
+
 
 
 @login_required(login_url='/login')
@@ -481,13 +557,83 @@ def candidatepage(request):
 
 def joblisting(request):
     if request.user.is_authenticated:
-        jobdetails = Jobdetails.objects.all()
-        context={
-            "jobdetails":jobdetails,
             
-        }
-        return render(request,'jobseeker/jobs.html',context)
+            jobdetails = Jobdetails.objects.all()
+            profiledetails=EmployeerProfile.objects.all()
+            context={
+                    "jobdetails":jobdetails,
+                    "profiledetails":profiledetails,
+            }
+            return render(request,'jobseeker/jobs.html',context)
+            
     return redirect('loginpage')
+
+def jobsindetail(request,id):
+    if request.user.is_authenticated:
+            details =Jobdetails.objects.get(job_id=id)
+            profiledetails=EmployeerProfile.objects.all()
+            publisheddate=details.publisheddate
+            formatDate = publisheddate.strftime("%d-%b-%y")
+            context ={
+                "job_title":details.job_title,
+                "type": details.job_type,
+                "description":details.job_description,
+                "lastdate":details.lastdate,
+                "specialisation":details.specialisation,
+                "salary":details.expected_salary,
+                "experience":details.experience,
+                "vaccancies":details.vacancies,
+                "qualification":details.qualification,
+                "company_id":details.cmp_id_id,
+                "profiledetails":profiledetails,
+                "publisheddate":formatDate,
+            }
+
+            return render(request,'jobseeker/jobdetails.html',context)
+            
+    return redirect('loginpage')
+
+def editprofile(request):
+    if request.user.is_authenticated:
+        userid=request.user.id
+        if request.method == 'POST':
+            profile_photo = request.FILES.get('customFile')
+            first_name = request.POST.get('first_name')
+            last_name=request.POST.get('last_name')
+            phone=request.POST.get('phone')
+            email =request.user.email
+            highestqualification= request.POST.get('highestqualification')
+            age=request.POST.get('age')
+            aboutyourself=request.POST.get('aboutyourself')
+            jobseek=JobseekerProfile.objects.get(user_id=userid)
+            JobseekerProfile.objects.filter(user_id=userid).update(
+                profile_photo=profile_photo,
+                first_name=first_name,
+                last_name=last_name,
+                phone=phone,
+                email=email,
+                highestqualification=highestqualification,
+                age=age,
+                aboutyourself=aboutyourself,  
+            )
+
+
+            languages = request.POST.getlist('tags')
+            for tag in languages:
+                tag, _ = Tag.objects.get_or_create(name=tag)
+                jobseek.tags.add(tag)
+        else:
+
+
+
+            
+
+
+            return render(request,'jobseeker/jobseekerprofile.html')
+    return redirect('loginpage')
+
+    
+
 
 
 

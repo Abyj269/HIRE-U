@@ -21,17 +21,30 @@ urlpatterns = [
 #Employeer Page Urls
     path('postjob', views.postjob, name='postjob'),
     path('addqualification/<int:id>/', views.addqualification, name='addqualification'),
+    path('addskills/<int:id>/', views.addskills, name='addskills'),
+
     # path('viewqualifications/<int:id>/', views.viewqualifications,name='viewqualifications'),
     path('qualificationdelete/<int:id>/', views.qualificationdelete,name='qualificationdelete'),
     path('qualificationupdate/<int:id>/', views.qualificationupdate,name='qualificationupdate'),
+
+
+    path('skilldelete/<int:id>/', views.skilldelete,name='skilldelete'),
+    path('skillupdate/<int:id>/', views.skillupdate,name='skillupdate'),
+
     path('managejobs/<int:id>/',views.managejobs,name='managejobs'),
+
+
+
+
     
     path('deletejob/<int:id>/',views.deletejob,name='deletejob'),
     path('editjob/<int:id>/',views.editjob,name='editjob'),
     path('previewjob/<int:id>/',views.previewjob,name='previewjob'),
     path('jobdetails/<int:id>/',views.jobdetails,name='jobdetails'),
 
-    path('changestatus/<int:id>/',views.changestatus,name='changestatus'),
+    path('changestatus/<int:id>',views.changestatus, name='changestatus'),
+    path('changeskillstatus/<int:id>',views.changeskillstatus, name='changeskillstatus'),
+
 
     path('editprofile/<int:id>/',views.editemployeerprofile,name='editemployeerprofile'),
     path('profileverify/',views.profileverify,name='profileverify'),
@@ -48,5 +61,6 @@ urlpatterns = [
 #Jobseeker Page Urls
     path('editprofile', views.editprofile, name='editprofile'),
     path('joblisting', views.joblisting, name='joblisting'),
+    path('jobdetails/<int:id>', views.jobsindetail, name='jobsindetail'),
     ]
  

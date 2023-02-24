@@ -10,7 +10,7 @@
             <nav aria-label="breadcrumb" class='breadcrumb-header'>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'postjob' %}">Jobsettings</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Fields</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Skills</li>
                 </ol>
             </nav>
         </div>
@@ -19,7 +19,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Add Qualification</h4>
+            <h4 class="card-title">Add Skills</h4>
         </div>
         
         <div class="card-body">
@@ -37,13 +37,13 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group mb-3">
-                            <label for="qualification" class="form-label">Qualification</label>
-                            <input type="text" class="form-control" id="qualification" name="qualification" placeholder="Add qualification">
+                            <label for="qualification" class="form-label">Skills</label>
+                            <input type="text" class="form-control" id="skills" name="skills" placeholder="Add Skills" required>
                             <!-- <input type="text"  name="qu" value="{{user.id}}" hidden> -->
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Add Qualifications</button> 
+                <button class="btn btn-primary" type="submit">Add Skills</button> 
                
             </form>
 
@@ -52,7 +52,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">View Qualification</h4>
+            <h4 class="card-title">View Skills</h4>
         </div>
         
         <div class="card-body">
@@ -60,7 +60,7 @@
             <table class='table table-bordered' id="table1">
                 <thead>
                     <tr>
-                        <th>Qualification</th>
+                        <th>Skill</th>
                         <th>Status</th>
                         <th>Action</th>
                         <th>Change Status</th>
@@ -70,7 +70,7 @@
                 {% if pos %}
                    {% for i in pos %}
                     <tr>
-                        <td>{{i.qualification_name}}</td>
+                        <td>{{i.skill_name}}</td>
                         <td>{% if i.status == 0 %}
                                 <span class="badge bg-danger">Inactive</span>
                             {% else %}
@@ -78,12 +78,12 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a  class="btn btn-danger" href="{% url 'qualificationdelete' i.quali_id %}">Delete</a>     
-                            <a  class="btn btn-success" href ="{% url 'qualificationupdate' i.quali_id %}">Edit</a>
+                            <a  class="btn btn-danger" href="{% url 'skilldelete' i.skill_id %}">Delete</a>     
+                            <a  class="btn btn-success" href ="{% url 'skillupdate' i.skill_id %}">Edit</a>
                             
                         </td>
                         <td>
-                            <a class="btn btn-info" href="{% url 'changestatus' i.quali_id %}">Activate/Deactivate</a>
+                            <a class="btn btn-info" href="{% url 'changeskillstatus' i.skill_id %}">Activate/Deactivate</a>
                         </td>
                         
                     </tr>

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app1',
     'django_filters',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -136,7 +137,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
 )
 
-
+TAGGIT_CASE_INSENSITIVE = True
 
 
 
