@@ -214,17 +214,19 @@ def deletejob(request,id):
 
 def managejobs(request ,id):
     if request.user.is_authenticated:
+        pos = Jobdetails.objects.filter(cmp_id_id=id)
         if request.method =='POST':
             searched = request.POST['searched']
             jobs=Jobdetails.objects.filter(job_title__contains=searched)
             context={
                 'searched':searched,
-                'jobs':jobs
+                'jobs':jobs,
+                'pos':pos,
             }
-            return render(request,'employeer/searchjobs.html',context) 
+            return render(request,'employeer/managejobs.html',context) 
         
         else:
-            pos = Jobdetails.objects.filter(cmp_id_id=id)
+           
             context ={
                 'pos': pos,
                 'id':id

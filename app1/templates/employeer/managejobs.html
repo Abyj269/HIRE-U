@@ -60,6 +60,12 @@
                     {% endfor %}
                 
                 {% endif %}
+               
+
+
+
+
+
               
                 </tbody>
             </table>
@@ -70,7 +76,7 @@
 
 
 <script>
-    var voice = {
+  var voice = {
   // (A) INIT SPEECH RECOGNITION
   sform : null, // HTML SEARCH FORM
   sfield : null, // HTML SEARCH FIELD
@@ -132,55 +138,6 @@
   }
 };
 window.addEventListener("DOMContentLoaded", voice.init); 
-
-
-
-// var isRecording = false;
-
-// // Start recording when the button is pressed
-// const startRecordingButton = document.getElementById("search_button");
-// startRecordingButton.addEventListener("click", startRecording);
-
-// const recognition = new webkitSpeechRecognition();
-// recognition.continuous = true;
-
-// const languageSelector = document.getElementById("language-selector");
-// recognition.lang = languageSelector.value;
-// languageSelector.addEventListener("change", (event) => {
-//   recognition.abort();
-//   setTimeout(() => {
-//     recognition.lang = event.target.value;
-//     recognition.start();
-//   }, 1000);  //We call recognition.start() in a timeout to make sure the abort() function is done
-// });
-
-// recognition.onresult = (event) => {
-//   for (let i = event.resultIndex; i < event.results.length; i++) {
-//     const transcript = event.results[i][0].transcript;
-//     if (event.results[i].isFinal) {
-//       if (isRecording==true) { console.log(transcript); document.getElementById("search_text").innerHTML = document.getElementById("search_text").innerHTML + "<p>" + transcript}
-//     }
-//   }
-// };
-
-// //Function for the button that toggles between transcribing or not transcribing speech
-// //(here called "recording" although strictly speaking the app keeps recording
-// //continuously
-// function startRecording() {
-//   if (isRecording == false) {
-//     isRecording = true
-//     document.getElementById("search_button").style.backgroundColor = 'Red';
-//   }else{
-//     isRecording = false
-//     document.getElementById("search_button").style.backgroundColor = 'Grey';
-//   }
-//   console.log(isRecording)
-// }
-
-// recognition.start();
-
-
-
 
 </script>
 
