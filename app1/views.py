@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
+from app1.models import candidateSkillsandTechnologies
 from django.contrib import messages
 from app1.models import Jobdetails,Qualifications,User
 from django.views import generic
@@ -11,6 +12,7 @@ from django.urls import reverse
 from .models import Qualifications
 from django.contrib.auth.decorators import login_required
 from taggit.models import Tag, TaggedItem
+import requests
 
 
 
@@ -557,7 +559,15 @@ def candidatepage(request):
 
 def joblisting(request):
     if request.user.is_authenticated:
-            
+        if request.method =='POST':
+            searched = request.POST['searched']
+            jobs=Jobdetails.objects.filter(job_title__contains=searched)
+            context={
+                'searched':searched,
+                'jobs':jobs,
+            }
+            return render(request,'jobseeker/jobs.html',context) 
+        else:
             jobdetails = Jobdetails.objects.all()
             profiledetails=EmployeerProfile.objects.all()
             context={
@@ -593,52 +603,85 @@ def jobsindetail(request,id):
             
     return redirect('loginpage')
 
+
+
 def editprofile(request):
     if request.user.is_authenticated:
         userid=request.user.id
+        jobseek=JobseekerProfile.objects.get(user_id=userid)
+
+        jobseekprofile_id=jobseek.id
+        email =request.user.email
+        profileidexist = candidateSkillsandTechnologies.objects.get(profile_id_id=jobseekprofile_id)
+       
+
         if request.method == 'POST':
             profile_photo = request.FILES.get('customFile')
             first_name = request.POST.get('first_name')
             last_name=request.POST.get('last_name')
             phone=request.POST.get('phone')
-            email =request.user.email
             highestqualification= request.POST.get('highestqualification')
             age=request.POST.get('age')
             aboutyourself=request.POST.get('aboutyourself')
-            jobseek=JobseekerProfile.objects.get(user_id=userid)
+            fulladdress=request.POST.get('fulladdress')
+            skills=request.POST.get('skills')
+
             JobseekerProfile.objects.filter(user_id=userid).update(
-                profile_photo=profile_photo,
                 first_name=first_name,
                 last_name=last_name,
-                phone=phone,
+                phone_number=phone,
                 email=email,
                 highestqualification=highestqualification,
                 age=age,
-                aboutyourself=aboutyourself,  
-            )
+                aboutyourself=aboutyourself,
+                fulladdress=fulladdress
+                )
 
+            if jobseek.profile_photo and profile_photo:
+                jobseek.profile_photo.delete()
+            if profile_photo:
+                jobseek.profile_photo =profile_photo
+                jobseek.save()
 
-            languages = request.POST.getlist('tags')
-            for tag in languages:
-                tag, _ = Tag.objects.get_or_create(name=tag)
-                jobseek.tags.add(tag)
-        else:
-
-
-
+            try:
+               
+                profileidexist.skill_name = skills
+                profileidexist.save()
+            except candidateSkillsandTechnologies.DoesNotExist:
+                addedskills = candidateSkillsandTechnologies(
+                    skill_name=skills,
+                    profile_id_id=jobseekprofile_id
+                    )
+                addedskills.save()
             
+        
+            return redirect(editprofile)
+            
+        
+        else:
+            # for tag in taggeditem:
+            #     print(tag.tag.name)
+            context={
+            "profile_photo":jobseek.profile_photo,
+            "first_name":jobseek.first_name,
+            "last_name":jobseek.last_name,
+            "phone":jobseek.phone_number,
+            "email":jobseek.email,
+            "highestqualification":jobseek.highestqualification,
+            "age":jobseek.age,
+            "aboutyourself":jobseek.aboutyourself,
+            "fulladdress":jobseek.fulladdress,
+            "skills":profileidexist.skill_name,
+            }
+            return render(request,'jobseeker/jobseekerprofile.html',context)
+    else:
+        return redirect('loginpage')
 
 
-            return render(request,'jobseeker/jobseekerprofile.html')
-    return redirect('loginpage')
+
+
 
     
-
-
-
-
-
-
 
 
 

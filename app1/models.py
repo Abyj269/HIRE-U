@@ -6,7 +6,7 @@ import re
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import datetime
-from taggit.managers import TaggableManager
+
 
 
 class User(AbstractUser):
@@ -57,9 +57,9 @@ class JobseekerProfile(models.Model):
     email=models.EmailField(blank=True, null=True,max_length=60)
     highestqualification=models.CharField(blank=True, null=True,max_length=50)
     age=models.IntegerField(blank=True, null=True)
-    languages=TaggableManager()
     profile_photo = models.ImageField(null=True,blank=True,upload_to='images/')
     aboutyourself = models.CharField(null=True,blank=True,max_length=600)
+    fulladdress= models.CharField(null=True,blank=True,max_length=500)
     # full_address = models.CharField(max_length=255,null=True,blank=True)
     # pincode = models.IntegerField(blank=True, null=True)
     # website_url = models.URLField(blank=True, null=True)
@@ -69,6 +69,13 @@ class JobseekerProfile(models.Model):
     def __str__(self):
         return str(self.first_name)
 
+
+class candidateSkillsandTechnologies(models.Model):
+    skill_name = models.CharField(max_length=50,null=True,blank=True)
+    profile_id = models.ForeignKey(JobseekerProfile,default=None,on_delete=models.CASCADE)
+
+
+#Employeer Models
 
 class EmployeerManager(BaseUserManager):
     def get_queryset(self, *args, **kwargs):
@@ -110,8 +117,6 @@ class EmployeerProfile(models.Model):
         return str(self.user)
     
 
-
-
 class Verificationdetails(models.Model):
     user = models.OneToOneField(User,default=None,on_delete=models.CASCADE)
     buisnesslicence=models.ImageField(null=True,blank=True,upload_to='images/')
@@ -150,11 +155,6 @@ class Qualifications(models.Model):
     def __str__(self):
         return self.qualification_name
     
-    # @property
-    # def id(self):
-    #  return self.cmp_id.id
-    
-
 class Skills(models.Model):
     skill_id = models.AutoField(primary_key=True) 
     skill_name = models.CharField(max_length=100,null=True,blank=True)

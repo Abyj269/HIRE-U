@@ -29,12 +29,19 @@
                     </div>
                     
                     <div class="_dashboard_content_body py-3 px-3">
-                        <form class="row" enctype="multipart/form-data">
+                        <form class="row" enctype="multipart/form-data" method="post">
+                            {% csrf_token %}
                             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
-                                <div class="custom-file avater_uploads">
-                                  <input type="file" class="custom-file-input" id="customFile" name="customFile">
-                                  <label class="custom-file-label" for="customFile"><i class="fa fa-user"></i></label>
-                                </div>
+                                {% if profile_photo %}
+                                    <img src="{{profile_photo.url}}" style="width:210px; height:200px ;">
+                                    <input type="file" class="custom-file-input" id="customFile" name="customFile">
+                                   
+                                {% else %}
+                                    <div class="custom-file avater_uploads">
+                                        <input type="file" class="custom-file-input" id="customFile" name="customFile">
+                                        <label class="custom-file-label" for="customFile"><i class="fa fa-user"></i></label>
+                                    </div>
+                                {% endif %}
                             </div>
                             
                             <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12">
@@ -42,25 +49,25 @@
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">First Name</label>
-                                            <input type="text" class="form-control rounded" value="" name="first_name">
+                                            <input type="text" class="form-control rounded" value="{% if first_name %}{{first_name}}{% endif %}" name="first_name">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Last Name</label>
-                                            <input type="text" class="form-control rounded" value="" name="last_name">
+                                            <input type="text" class="form-control rounded" value="{% if last_name %}{{last_name}}{% endif %}" name="last_name">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Phone</label>
-                                            <input type="text" class="form-control rounded" value="" name="phone">
+                                            <input type="text" class="form-control rounded" value="{% if phone %}{{phone}}{% endif %}" name="phone">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Email</label>
-                                            <input type="email" class="form-control rounded" value="">
+                                            <input type="email" class="form-control rounded" value="{% if email %}{{email}}{% endif %}" readonly>
                                         </div>
                                     </div>
                                     <!-- <div class="col-xl-6 col-lg-6">
@@ -103,7 +110,7 @@
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Highest Qualification</label>
-                                            <input type="text" class="form-control rounded" value="" name="highestqualification">
+                                            <input type="text" class="form-control rounded" value="{% if highestqualification %}{{highestqualification}}{% endif %}" name="highestqualification">
                                         </div>
                                     </div>
                                     <!-- <div class="col-xl-6 col-lg-6">
@@ -131,37 +138,38 @@
                                     <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Age</label>
-                                            <select class="custom-select rounded" name="age">
-                                                <option>Select Age</option>
-                                                <option>15</option>
-                                                <option>16</option>
-                                                <option>17</option>
-                                                <option>18</option>
-                                                <option>19</option>
-                                                <option>20</option>
-                                                <option>21</option>
-                                                <option>22</option>
-                                                <option>23</option>
-                                                <option>24</option>
-                                                <option>25</option>
-                                                <option>26</option>
-                                                <option>27</option>
-                                                <option>28+</option>
-                                            </select>
+                                            <input type="number" class="form-control rounded" value="{% if age %}{{age}}{% endif %}" name="age" required>
+                                            
                                         </div>
                                     </div>
-                                    <div class="col-xl-6 col-lg-6">
+                                    <!-- <div class="col-xl-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">Languages Known</label>
-                                            <input type="text" class="form-control rounded" name="tags" data-role="tagsinput"  placeholder="Ex. English,Hindi">
+                                            <input type="text" class="form-control rounded" name="languages" data-role="tagsinput"  placeholder="Ex. English,Hindi" value="{% if languages %}{% for language in languages %}{{ language }}{% endfor %}{% endif %}">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-xl-12 col-lg-12">
                                         <div class="form-group">
                                             <label class="text-dark ft-medium">About Yourself</label>
-                                            <textarea class="form-control with-light" name="aboutyourself"></textarea>
+                                            <textarea class="form-control with-light" name="aboutyourself">{% if aboutyourself %}{{aboutyourself}}{% endif %}</textarea>
                                         </div>
                                     </div>
+
+                                    <div class="col-xl-12 col-lg-12 col-md-12">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">Full Address</label>
+                                            <input type="text" name="fulladdress" class="form-control rounded" value="{% if fulladdress %}{{fulladdress}}{% endif %}" >
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-xl-12 col-lg-12 col-md-12">
+                                        <div class="form-group">
+                                            <label class="text-dark ft-medium">SKills Known</label>
+                                            <input type="password" class="form-control rounded" name="skills" data-role="tagsinput" placeholder="HTML,CSS,JAVASCRIPT etc" value="{% if skills %}{{skills}}{% endif %}">
+                                        </div>
+                                    </div>
+                                    
                                     
                                     <div class="col-xl-12 col-lg-12">
                                         <div class="form-group">
@@ -177,7 +185,7 @@
             </div>
 
 
-            <div class="col-lg-12 col-md-12">
+            <!-- <div class="col-lg-12 col-md-12">
                 <div class="_dashboard_content bg-white rounded mb-4">
                     <div class="_dashboard_content_header br-bottom py-3 px-3">
                         <div class="_dashboard__header_flex">
@@ -208,13 +216,13 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
 
 
 
 
-            <div class="col-lg-12 col-md-12">
+            <!-- <div class="col-lg-12 col-md-12">
                 <div class="_dashboard_content bg-white rounded mb-4">
                     <div class="_dashboard_content_header br-bottom py-3 px-3">
                         <div class="_dashboard__header_flex">
@@ -227,28 +235,28 @@
                             <div class="col-xl-6 col-lg-6 col-md-12">
                                 <div class="form-group">
                                     <label class="text-dark ft-medium">Country</label>
-                                    <!-- <select class="custom-select rounded">
+                                    <select class="custom-select rounded">
                                         <option>Australia</option>
                                         <option>United States</option>
                                         <option>United Kingdom</option>
                                         <option>China</option>
                                         <option>India</option>
                                         <option>Pakistan</option>
-                                    </select> -->
+                                    </select>
                                     <input type="text" class="form-control rounded"></input>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12">
                                 <div class="form-group">
                                     <label class="text-dark ft-medium">State</label>
-                                    <!-- <select class="custom-select rounded">
+                                    <select class="custom-select rounded">
                                         <option>Madhya Pradesh</option>
                                         <option>Punjab</option>
                                         <option>Uttar Pradesh</option>
                                         <option>Arudachal</option>
                                         <option>Nepal</option>
                                         <option>Afganistan</option>
-                                    </select> -->
+                                    </select>
                                     <input type="text" class="form-control rounded"></input>
 
                                 </div>
@@ -256,10 +264,10 @@
                             <div class="col-xl-12 col-lg-12 col-md-12">
                                 <div class="form-group">
                                     <label class="text-dark ft-medium">Full Address</label>
-                                    <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
+                                    <input type="password" class="form-control rounded" >
                                 </div>
                             </div>
-                            <!-- <div class="col-xl-6 col-lg-6 col-md-12">
+                            <div class="col-xl-6 col-lg-6 col-md-12">
                                 <div class="form-group">
                                     <label class="text-dark ft-medium">Latitude</label>
                                     <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
@@ -270,7 +278,7 @@
                                     <label class="text-dark ft-medium">Longitude</label>
                                     <input type="password" class="form-control rounded" placeholder="#10 Marke Juger, SBI Road">
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="col-xl-12 col-lg-12">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-md ft-medium text-light rounded theme-bg">Save Changes</button>
@@ -279,7 +287,12 @@
                         </form>
                     </div>
                 </div>
-            </div>	
+            </div>	 -->
+
+
+
+    
+    
     
 
 
@@ -294,6 +307,27 @@
         </div>       
     </div>
 </div>
+
+<script>
+   const countrySelect = document.getElementById('selectcountry');
+
+fetch('/countrystatelist')
+  .then(response => response.json())
+  .then(data => {
+    // Get countries from JSON response
+    const countries = data.countries;
+
+    // Generate option elements for each country
+    const options = countries.map(country => `<option value="${country.iso2}">${country.name}</option>`);
+
+    // Add option elements to select element
+    countrySelect.innerHTML = options.join('\n');
+  })
+  .catch(error => console.error(`Error fetching countries: ${error}`));
+  
+
+</script>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

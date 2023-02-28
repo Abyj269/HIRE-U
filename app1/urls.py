@@ -50,6 +50,7 @@ urlpatterns = [
     path('profileverify/',views.profileverify,name='profileverify'),
 
 
+
 #Moderator Page URLS
 
     path('employerslist', views.employerslist, name='employerslist'),
