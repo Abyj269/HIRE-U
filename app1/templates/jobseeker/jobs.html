@@ -19,14 +19,17 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
+               
                 <div class="job_filter white-bg">
+                    <form  method="post" >
+                    {% csrf_token %}
                     <div class="form_inner white-bg">
                         <h3>Filter</h3>
-                        <form action="#">
+                      
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="single_field">
-                                        <input type="search" placeholder="Search keyword">
+                                        <input type="search" placeholder="Search keyword" name="searched">
                                     </div>
                                 </div>
                                 <!-- <div class="col-lg-12">
@@ -84,7 +87,7 @@
                                     </div>
                                 </div> -->
                             </div>
-                        </form>
+                       
                     </div>
                     <!-- <div class="range_wrap">
                         <label for="amount">Price range:</label>
@@ -97,6 +100,7 @@
                     <div class="reset_btn mt-3">
                         <button  class="boxed-btn3 w-100" type="submit">Search</button>
                     </div> 
+                    </form>
                 </div>
             </div>
             <div class="col-lg-9">
@@ -107,68 +111,131 @@
                                 <h4>Job Listing</h4>
                             </div>
                             <div class="col-md-6">
-                                <div class="serch_cat d-flex justify-content-end">
-                                    <select>
-                                        <option data-display="Most Recent">Most Recent</option>
-                                        <option value="1">Marketer</option>
-                                        <option value="2">Wordpress </option>
-                                        <option value="4">Designer</option>
-                                    </select>
-                                </div>
+                                <form method="post">
+                                    <div class="serch_cat d-flex justify-content-end">
+                                        <select>
+                                            <option data-display="Most Recent">Most Recent</option>
+                                            <option value="1"></option>
+                                            <option value="2">Wordpress </option>
+                                            <option value="4">Designer</option>
+                                        </select>
+                                    </div>
+                                </form>
+                               
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="job_lists m-0">
-                    <div class="row">
-
-                      {% for i in jobdetails %}
-                        <div class="col-lg-12 col-md-12">
-                            <div class="single_jobs white-bg d-flex justify-content-between">
-                                <div class="jobs_left d-flex align-items-center">
-                                    <div class="thumb">
-                                        {% for j in profiledetails %}
-                                          {% if j.user_id == i.cmp_id_id  %}
-                                            <img src="{{j.company_logo.url}}" alt="" style="height: 50px;width:50px;">
-                                          {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                    <div class="jobs_conetent">
-                                        <a href="{% url 'jobsindetail' i.job_id %}"><h4>{{i.job_title}}</h4></a>
-                                        <div class="links_locat d-flex align-items-center">
-                                            <div class="location">
-                                                <p> <i class="fa fa-map-marker"></i>{{i.office_location}}</p>
+                    <div class="row">   
+                    {% if jobdetails %}  
+                        {% for i in jobdetails %}
+                            
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="single_jobs white-bg d-flex justify-content-between">
+                                        <div class="jobs_left d-flex align-items-center">
+                                            <div class="thumb">
+                                                {% for j in profiledetails %}
+                                                {% if j.user_id == i.cmp_id_id  %}
+                                                    <img src="{{j.company_logo.url}}" alt="" style="height: 50px;width:50px;">
+                                                {% endif %}
+                                                {% endfor %}
                                             </div>
-                                            <div class="location">
-                                                <p> <i class="fa fa-clock-o"></i>{{i.job_type}}</p>
+                                            <div class="jobs_conetent">
+                                                <a href="{% url 'jobsindetail' i.job_id %}"><h4>{{i.job_title}}</h4></a>
+                                                <div class="links_locat d-flex align-items-center">
+                                                    <div class="location">
+                                                        <p> <i class="fa fa-map-marker"></i>{{i.office_location}}</p>
+                                                    </div>
+                                                    <div class="location">
+                                                        <p> <i class="fa fa-clock-o"></i>{{i.job_type}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="jobs_right">
+                                            <div class="apply_now">
+                                                <a class="heart_mark" href="#"> <i class="fa fa-heart"></i> </a>
+                                                <a href="{% url 'jobsindetail' i.job_id %}" class="boxed-btn3">Apply Now</a>
+                                            </div>
+                                            <div class="date">
+                                                <p>Date line: {{i.lastdate}}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="jobs_right">
-                                    <div class="apply_now">
-                                        <a class="heart_mark" href="#"> <i class="fa fa-heart"></i> </a>
-                                        <a href="{% url 'jobsindetail' i.job_id %}" class="boxed-btn3">Apply Now</a>
-                                    </div>
-                                    <div class="date">
-                                        <p>Date line: {{i.lastdate}}</p>
+                           
+                        {% endfor %}
+                    {% elif jobs %}
+                            {% for i in jobs %}
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="single_jobs white-bg d-flex justify-content-between">
+                                        <div class="jobs_left d-flex align-items-center">
+                                            <div class="thumb">
+                                                {% for j in profiledetails %}
+                                                {% if j.user_id == i.cmp_id_id  %}
+                                                    <img src="{{j.company_logo.url}}" alt="" style="height: 50px;width:50px;">
+                                                {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="jobs_conetent">
+                                                <a href="{% url 'jobsindetail' i.job_id %}"><h4>{{i.job_title}}</h4></a>
+                                                <div class="links_locat d-flex align-items-center">
+                                                    <div class="location">
+                                                        <p> <i class="fa fa-map-marker"></i>{{i.office_location}}</p>
+                                                    </div>
+                                                    <div class="location">
+                                                        <p> <i class="fa fa-clock-o"></i>{{i.job_type}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="jobs_right">
+                                            <div class="apply_now">
+                                                <a class="heart_mark" href="#"> <i class="fa fa-heart"></i> </a>
+                                                <a href="{% url 'jobsindetail' i.job_id %}" class="boxed-btn3">Apply Now</a>
+                                            </div>
+                                            <div class="date">
+                                                <p>Date line: {{i.lastdate}}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        {% endfor %}
+                            {% endfor %}
+                            
+
+                    {% endif %}
+
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="pagination_wrap">
-                                <ul>
+                                <!-- <ul>
                                     <li><a href="#"> <i class="ti-angle-left"></i> </a></li>
                                     <li><a href="#"><span>01</span></a></li>
                                     <li><a href="#"><span>02</span></a></li>
                                     <li><a href="#"> <i class="ti-angle-right"></i> </a></li>
+                                </ul> -->
+                                <!-- {{pages}}<br>
+                                Has Previuos :{{pages.has_previous}}<br>
+                                Has Next:{{pages.has_next}}<br>
+                                Current Page:{{pages.number}}<br>
+                                {{pages.paginator.num_pages}} -->
+                                <ul>
+                                    {% if pages.has_previous %}
+                                    <li><a href="?page1"><span>01</span></a></li>
+                                    <li><a href="?page={{pages.previuos_page_number}}"><i class="ti-angle-left"></i></a> </li>  
+                                    {% endif %}
+                                        Page{{pages.number}} of {{pages.paginator.num_pages}}
+                                    {% if pages.has_next %}
+                                        <li><a href="?page={{pages.next_page_number}}"><span>02</span></a></li>  
+                                        <li><a href="?page={{pages.paginator.num_pages}}"> <i class="ti-angle-right"></i></a></li>
+                                    {% endif %}
+                                
                                 </ul>
+                                    
                             </div>
                         </div>
                     </div>

@@ -12,9 +12,7 @@ from django.urls import reverse
 from .models import Qualifications
 from django.contrib.auth.decorators import login_required
 from taggit.models import Tag, TaggedItem
-import requests
-
-
+from django.core.paginator import Paginator
 
 def index(request):
     return render(request,"home.html")
@@ -557,26 +555,109 @@ def candidatepage(request):
         return render(request,'jobseeker/home.html')
     return redirect('loginpage')
 
+# def joblisting(request):
+
+#     userid=request.user.id
+#     jobseekerprofile=JobseekerProfile.objects.get(user_id=userid)
+#     profile_id=jobseekerprofile.id  
+#     jobseekerskills = candidateSkillsandTechnologies.objects.get(id=profile_id)
+#     jobseeker_skills =jobseekerskills.skill_name
+#     jobseeker_skill_list=[s.strip() for s in jobseeker_skills.split(',')] 
+#     if request.user.is_authenticated:
+#         if request.method =='POST':
+#             searched = request.POST['searched']
+#             jobs=Jobdetails.objects.filter(job_title__contains=searched)
+#             profiledetails=EmployeerProfile.objects.all()
+#             context={
+#                 'searched':searched,
+#                 'jobs':jobs,
+#                 'profiledetails':profiledetails,
+#             }
+#             return render(request,'jobseeker/jobs.html',context) 
+#         else:
+#             allspecialisations = Jobdetails.objects.values_list('specialisation', flat=True)
+#             matching_skills = []
+
+#             skills = Skills.objects.all()
+#             for skill in skills:
+#                 for specialisation in allspecialisations:
+#                     if skill.skill_id == specialisation:
+#                         matching_skills.append(skill.skill_name)
+
+#             jobdetails = Jobdetails.objects.all()
+#             profiledetails=EmployeerProfile.objects.all()
+#             context={
+#                     "jobdetails":jobdetails,
+#                     "profiledetails":profiledetails,
+#             }
+
+
+
+          
+#             return render(request,'jobseeker/jobs.html',context)
+
+            
+#     return redirect('loginpage')
+
 def joblisting(request):
     if request.user.is_authenticated:
-        if request.method =='POST':
+        
+
+        userid = request.user.id
+        jobseekerprofile = JobseekerProfile.objects.get(user_id=userid)
+        profile_id = jobseekerprofile.id  
+
+        try:
+            jobseekerskills = candidateSkillsandTechnologies.objects.get(id=profile_id)
+            jobseeker_skills = jobseekerskills.skill_name
+            jobseeker_skill_list = [s.strip() for s in jobseeker_skills.split(',')]
+        except candidateSkillsandTechnologies.DoesNotExist:
+            jobseeker_skill_list = []
+
+        # jobseekerskills = candidateSkillsandTechnologies.objects.get(id=profile_id)
+        # jobseeker_skills = jobseekerskills.skill_name
+        # jobseeker_skill_list = [s.strip() for s in jobseeker_skills.split(',')] 
+
+        if request.method == 'POST':
             searched = request.POST['searched']
-            jobs=Jobdetails.objects.filter(job_title__contains=searched)
-            context={
-                'searched':searched,
-                'jobs':jobs,
+            jobs = Jobdetails.objects.filter(job_title__contains=searched)
+            profiledetails = EmployeerProfile.objects.all()
+            context = {
+                'searched': searched,
+                'jobs': jobs,
+                'profiledetails': profiledetails,
             }
-            return render(request,'jobseeker/jobs.html',context) 
+            return render(request, 'jobseeker/jobs.html', context) 
         else:
-            jobdetails = Jobdetails.objects.all()
-            profiledetails=EmployeerProfile.objects.all()
-            context={
-                    "jobdetails":jobdetails,
-                    "profiledetails":profiledetails,
+            job_details_dict = {}
+            jobdetails=Jobdetails.objects.all()
+           
+
+            for job in jobdetails:
+                job_skills = [s.strip() for s in job.specialisation.split(',')]
+                matching_skills = set(job_skills) & set(jobseeker_skill_list)
+                matching_score = len(matching_skills) / len(job_skills) * 100 if job_skills else 0
+                job_details_dict[job] = matching_score
+            sorted_job_details = sorted(job_details_dict.items(), key=lambda x: x[1], reverse=True)
+            sorted_jobs = [job for job, _ in sorted_job_details]
+
+            p = Paginator(sorted_jobs,3)
+            page=request.GET.get('page')
+            jos=p.get_page(page)
+
+            profiledetails = EmployeerProfile.objects.all()
+            context = {
+                'jobdetails': jos,
+                'profiledetails': profiledetails,
+                'pages':jos
             }
-            return render(request,'jobseeker/jobs.html',context)
-            
-    return redirect('loginpage')
+            return render(request, 'jobseeker/jobs.html', context)
+    else:
+        return redirect('loginpage')
+
+
+
+
 
 def jobsindetail(request,id):
     if request.user.is_authenticated:
@@ -610,9 +691,12 @@ def editprofile(request):
         userid=request.user.id
         jobseek=JobseekerProfile.objects.get(user_id=userid)
 
-        jobseekprofile_id=jobseek.id
+        jobseekprofile_id=jobseek.id 
+        profileidexist = None
+        # profileidexist = candidateSkillsandTechnologies.objects.get(profile_id_id=jobseekprofile_id)
+
         email =request.user.email
-        profileidexist = candidateSkillsandTechnologies.objects.get(profile_id_id=jobseekprofile_id)
+        
        
 
         if request.method == 'POST':
@@ -643,22 +727,23 @@ def editprofile(request):
                 jobseek.profile_photo =profile_photo
                 jobseek.save()
 
-            try:
-               
-                profileidexist.skill_name = skills
-                profileidexist.save()
-            except candidateSkillsandTechnologies.DoesNotExist:
-                addedskills = candidateSkillsandTechnologies(
-                    skill_name=skills,
-                    profile_id_id=jobseekprofile_id
-                    )
-                addedskills.save()
+            candidateSkillsandTechnologies.objects.update_or_create(
+                profile_id_id=jobseekprofile_id,
+                defaults={
+                    'skill_name': skills
+                }
+                )
             
         
             return redirect(editprofile)
             
         
         else:
+            if jobseekprofile_id is not None:
+                try:
+                    profileidexist = candidateSkillsandTechnologies.objects.get(profile_id_id=jobseekprofile_id)
+                except candidateSkillsandTechnologies.DoesNotExist:
+                    pass
             # for tag in taggeditem:
             #     print(tag.tag.name)
             context={
@@ -671,7 +756,7 @@ def editprofile(request):
             "age":jobseek.age,
             "aboutyourself":jobseek.aboutyourself,
             "fulladdress":jobseek.fulladdress,
-            "skills":profileidexist.skill_name,
+            "skills":profileidexist.skill_name if profileidexist is not None else None,
             }
             return render(request,'jobseeker/jobseekerprofile.html',context)
     else:

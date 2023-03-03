@@ -77,7 +77,7 @@
                                         {% for i in skills %}
                                                 {% if i.emp_profile_id == user_id %}
                                                     {% if i.status == 1 %}
-                                                        <option value='{{i.skill_id}}'>{{ i.skill_name }}</option> 
+                                                        <option value='{{i.skill_name}}'>{{ i.skill_name }}</option> 
                                                     {% endif %}
                                                 {% endif %}
                                         {% endfor %}
