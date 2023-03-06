@@ -1,0 +1,95 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h3>Applied Jobs</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="job_listing_area plus_padding">
+    <div class="container">
+            {% if appliedjobs %}
+                {% for i in appliedjobs %}
+
+
+                    <div class="job_lists m-0">
+                        <div class="row">   
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="single_jobs white-bg d-flex justify-content-between">
+                                            <div class="jobs_left d-flex align-items-center">
+                                                <div class="thumb">
+                                                    {% for j in employerprofile %}
+                                                        {% if j.id == i.employerprofile_id  %}
+                                                            <img src="{{j.company_logo.url}}" alt="" style="height: 50px;width:50px;">
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="jobs_conetent">
+                                                    <a href="{{}}">
+                                                        <h4>
+                                                            {% for j in jobdetails %}
+                                                                {% if j.job_id == i.job_id  %}
+                                                                    {{j.job_title}}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </h4>
+                                                    </a>
+                                                    <div class="links_locat d-flex align-items-center">
+                                                        <div class="location">
+                                                            <p> <i class="fa fa-map-marker"></i>
+                                                                {% for j in employerprofile %}
+                                                                    {% if j.id == i.employerprofile_id  %}
+                                                                        {{j.office_location}}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </p>
+                                                        </div>
+                                                        <div class="location">
+                                                            <p> <i class="fa fa-clock-o"></i>
+                                                                {% for j in jobdetails %}
+                                                                    {% if j.job_id == i.job_id  %}
+                                                                        {{j.job_type}}
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="jobs_right">
+                                                <div class="apply_now">
+                                                
+                                                    <a href="{{}}" class="boxed-btn3 ">Applied</a>
+                                                </div>
+                                                <div class="date">
+                                                    <p>Date line: 
+                                                        {% for j in jobdetails %}
+                                                            {% if j.job_id == i.job_id  %}
+                                                                {{j.lastdate}}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+
+            {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

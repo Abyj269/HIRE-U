@@ -75,6 +75,8 @@ class candidateSkillsandTechnologies(models.Model):
     profile_id = models.ForeignKey(JobseekerProfile,default=None,on_delete=models.CASCADE)
 
 
+
+
 #Employeer Models
 
 class EmployeerManager(BaseUserManager):
@@ -167,10 +169,18 @@ class Skills(models.Model):
 
 
 
+#Job application details
 
 
+class JobapplicationDetails(models.Model):
+    application_id=models.AutoField(primary_key=True)
+    jobseekerprofile=models.ForeignKey(JobseekerProfile,default=None,on_delete=models.CASCADE)
+    job=models.ForeignKey(Jobdetails,default=None,on_delete=models.CASCADE)
+    employerprofile=models.ForeignKey(EmployeerProfile,default=None,on_delete=models.CASCADE)
+    applicant_resume=models.FileField(null=True,blank=True,upload_to='pdf/')
+    application_status=models.BooleanField('status',default=1)
 
-
+    
 
     
 

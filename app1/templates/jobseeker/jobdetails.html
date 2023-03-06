@@ -33,7 +33,13 @@
                                 <a href="#"><h4>{{job_title}}</h4></a>
                                 <div class="links_locat d-flex align-items-center">
                                     <div class="location">
-                                        <p> <i class="fa fa-map-marker"></i> California, USA</p>
+                                        <p> <i class="fa fa-map-marker"></i> 
+                                            {% for j in profiledetails %}
+                                                {% if j.user_id == company_id  %}
+                                                    {{j.office_location}}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
                                     </div>
                                     <div class="location">
                                         <p> <i class="fa fa-clock-o"></i>{{type}}</p>
@@ -65,7 +71,7 @@
                             <li>Should have vast knowledge in IAS/ IFRS, Company Act, Income Tax, VAT.</li>
                         </ul>
                     </div> -->
-                    <div class="single_wrap">
+                    <!-- <div class="single_wrap">
                         <h4>Qualifications</h4>
                         <ul>
                             <li>The applicants should have experience in the following areas.
@@ -74,56 +80,69 @@
                             <li>Leadership, analytical, and problem-solving abilities.</li>
                             <li>Should have vast knowledge in IAS/ IFRS, Company Act, Income Tax, VAT.</li>
                         </ul>
-                    </div>
+                    </div> -->
                     <!-- <div class="single_wrap">
                         <h4>Benefits</h4>
                         <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing.</p>
                     </div> -->
                 </div>
-                <div class="apply_job_form white-bg">
-                    <h4>Apply for the job</h4>
-                    <form action="#">
-                        <div class="row">
-                            <!-- <div class="col-md-6">
-                                <div class="input_field">
-                                    <input type="text" placeholder="Your name">
-                                </div>
-                            </div> -->
-                            <div class="col-md-12">
-                                <div class="input_field">
-                                    <input type="text" placeholder="Email">
-                                </div>
-                            </div>
-                            <!-- <div class="col-md-12">
-                                <div class="input_field">
-                                    <input type="text" placeholder="Website/Portfolio link">
-                                </div>
-                            </div> -->
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <button type="button" id="inputGroupFileAddon03"><i class="fa fa-cloud-upload" aria-hidden="true"></i>
-                                      </button>
-                                    </div>
-                                    <div class="custom-file">
-                                      <input type="file" class="custom-file-input" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03">
-                                      <label class="custom-file-label" for="inputGroupFile03">Upload CV</label>
-                                    </div>
-                                  </div>
-                            </div>
-                            <!-- <div class="col-md-12">
-                                <div class="input_field">
-                                    <textarea name="#" id="" cols="30" rows="10" placeholder="Coverletter"></textarea>
-                                </div>
-                            </div> -->
-                            <div class="col-md-12">
-                                <div class="submit_btn">
-                                    <button class="boxed-btn3 w-100" type="submit">Apply Now</button>
-                                </div>
+                {% if applied %}
+                    <div class="apply_job_form white-bg">
+                        <div class="col-md-12">
+                            <div class="submit_btn">
+                                <label class="boxed-btn3 w-100" >Job is Applied </label>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                {% else %}
+                    <div class="apply_job_form white-bg">
+                        <h4>Apply for the job</h4>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <!-- <div class="col-md-6">
+                                    <div class="input_field">
+                                        <input type="text" placeholder="Your name">
+                                    </div>
+                                </div> -->
+                                <!-- <div class="col-md-12">
+                                    <div class="input_field">
+                                        <input type="text" placeholder="Email">
+                                    </div>
+                                </div> -->
+                                <!-- <div class="col-md-12">
+                                    <div class="input_field">
+                                        <input type="text" placeholder="Website/Portfolio link">
+                                    </div>
+                                </div> -->
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                        <button type="button" id="inputGroupFileAddon03"><i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                                        </button>
+                                        </div>
+                                        <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile03" name="resume" aria-describedby="inputGroupFileAddon03">
+                                        <label class="custom-file-label" for="inputGroupFile03">Upload CV</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="number" class="custom-file-input" id="inputGroupFile03" name="job_id" value="{{jobid}}" hidden>
+                                <!-- <div class="col-md-12">
+                                    <div class="input_field">
+                                        <textarea name="#" id="" cols="30" rows="10" placeholder="Coverletter"></textarea>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-12">
+                                    <div class="submit_btn">
+                                        <button class="boxed-btn3 w-100" type="submit">Apply Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+              
             </div>
             <div class="col-lg-4">
                 <div class="job_sumary">
@@ -134,7 +153,7 @@
                         <ul>
                             <li>Published on: <span>{{publisheddate}}</span></li>
                             <li>Vacancy: <span>{{vaccancies}} Position</span></li>
-                            <li>Salary: <span>50k - 120k/y</span></li>
+                            <li>Salary: <span>{{salary}}</span></li>
                             {% for j in profiledetails %}
                                 {% if j.user_id == company_id  %}
                                     <li>Location: <span>{{j.office_location}}</span></li>

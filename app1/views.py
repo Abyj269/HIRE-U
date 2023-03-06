@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
-from app1.models import candidateSkillsandTechnologies
+from app1.models import candidateSkillsandTechnologies,JobapplicationDetails
 from django.contrib import messages
 from app1.models import Jobdetails,Qualifications,User
 from django.views import generic
@@ -641,7 +641,7 @@ def joblisting(request):
             sorted_job_details = sorted(job_details_dict.items(), key=lambda x: x[1], reverse=True)
             sorted_jobs = [job for job, _ in sorted_job_details]
 
-            p = Paginator(sorted_jobs,3)
+            p = Paginator(sorted_jobs,4)
             page=request.GET.get('page')
             jos=p.get_page(page)
 
@@ -661,7 +661,34 @@ def joblisting(request):
 
 def jobsindetail(request,id):
     if request.user.is_authenticated:
-            details =Jobdetails.objects.get(job_id=id)
+        userid= request.user.id
+        jobseekerprofie=JobseekerProfile.objects.get(user_id=userid)
+        details =Jobdetails.objects.get(job_id=id)
+        empprofileid=details.cmp_id
+        empprofile=EmployeerProfile.objects.get(user_id=empprofileid)
+        jobid=details.job_id
+        jobseekerprofie_id=jobseekerprofie.id
+        if request.method == 'POST':
+            cv=request.FILES.get('resume')
+            # jobid=request.POST.get('job_id')
+            jobapplicaion= JobapplicationDetails(
+                applicant_resume=cv,
+                jobseekerprofile_id=jobseekerprofie_id,
+                job_id=jobid,
+                employerprofile_id=empprofile.id
+                )          
+            jobapplicaion.save()
+            return redirect(reverse('jobsindetail',args=[jobid]))
+        else:
+            
+            applied = False
+            if  JobapplicationDetails.objects.all() is not None:
+                try:
+                    applicationdetails=JobapplicationDetails.objects.get(jobseekerprofile_id=jobseekerprofie_id,job_id=jobid)
+                    applied=True
+                except JobapplicationDetails.DoesNotExist:
+                    pass
+
             profiledetails=EmployeerProfile.objects.all()
             publisheddate=details.publisheddate
             formatDate = publisheddate.strftime("%d-%b-%y")
@@ -678,6 +705,8 @@ def jobsindetail(request,id):
                 "company_id":details.cmp_id_id,
                 "profiledetails":profiledetails,
                 "publisheddate":formatDate,
+                "jobid":details.job_id,
+                "applied":applied,
             }
 
             return render(request,'jobseeker/jobdetails.html',context)
@@ -762,13 +791,26 @@ def editprofile(request):
     else:
         return redirect('loginpage')
 
+def appliedjobs(request):
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    appliedjobs = JobapplicationDetails.objects.filter(jobseekerprofile_id=profileid)
+   
 
 
+    jobdetails=Jobdetails.objects.all()
+    empprofiledetails = EmployeerProfile.objects.all()
+    context={
+        "appliedjobs":appliedjobs,
+        "jobdetails":jobdetails,
+        "employerprofile":empprofiledetails,  
+    }
 
+    return render(request,'jobseeker/appliedjobs.html',context)
 
-    
+def appliedjobstatus(request):
 
-
+    return render(request,'jobseeker/appliedjobs.html')
 
 
 
