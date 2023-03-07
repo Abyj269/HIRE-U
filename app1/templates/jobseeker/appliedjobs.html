@@ -19,10 +19,10 @@
     <div class="container">
             {% if appliedjobs %}
                 {% for i in appliedjobs %}
-
-
                     <div class="job_lists m-0">
-                        <div class="row">   
+                        <div class="row"> 
+                            
+                                    
                                     <div class="col-lg-12 col-md-12">
                                         <div class="single_jobs white-bg d-flex justify-content-between">
                                             <div class="jobs_left d-flex align-items-center">
@@ -34,7 +34,7 @@
                                                     {% endfor %}
                                                 </div>
                                                 <div class="jobs_conetent">
-                                                    <a href="{{}}">
+                                                    <a href="{% url 'appliedjobstatus' i.job_id %}">
                                                         <h4>
                                                             {% for j in jobdetails %}
                                                                 {% if j.job_id == i.job_id  %}
@@ -67,8 +67,7 @@
                                             </div>
                                             <div class="jobs_right">
                                                 <div class="apply_now">
-                                                
-                                                    <a href="{{}}" class="boxed-btn3 ">Applied</a>
+                                                    <a href="{% url 'appliedjobstatus' i.job_id %}" class="boxed-btn3 ">Applied</a>
                                                 </div>
                                                 <div class="date">
                                                     <p>Date line: 

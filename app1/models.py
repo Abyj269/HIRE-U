@@ -3,10 +3,10 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import re
+
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import datetime
-
 
 
 class User(AbstractUser):
@@ -171,16 +171,16 @@ class Skills(models.Model):
 
 #Job application details
 
-
 class JobapplicationDetails(models.Model):
-    application_id=models.AutoField(primary_key=True)
-    jobseekerprofile=models.ForeignKey(JobseekerProfile,default=None,on_delete=models.CASCADE)
-    job=models.ForeignKey(Jobdetails,default=None,on_delete=models.CASCADE)
-    employerprofile=models.ForeignKey(EmployeerProfile,default=None,on_delete=models.CASCADE)
-    applicant_resume=models.FileField(null=True,blank=True,upload_to='pdf/')
-    application_status=models.BooleanField('status',default=1)
-
+    application_id = models.AutoField(primary_key=True)
+    jobseekerprofile = models.ForeignKey(JobseekerProfile, default=None, on_delete=models.CASCADE)
+    job = models.ForeignKey(Jobdetails, default=None, on_delete=models.CASCADE)
+    employerprofile = models.ForeignKey(EmployeerProfile, default=None, on_delete=models.CASCADE)
+    applicant_resume = models.FileField(null=True, blank=True, upload_to='pdf/')
+    application_status = models.BooleanField('status', default=1)
     
-
+    
+  
+    
     
 

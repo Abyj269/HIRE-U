@@ -13,6 +13,7 @@ from .models import Qualifications
 from django.contrib.auth.decorators import login_required
 from taggit.models import Tag, TaggedItem
 from django.core.paginator import Paginator
+import datetime
 
 def index(request):
     return render(request,"home.html")
@@ -540,9 +541,24 @@ def profileverify(request):
      return redirect('loginpage')
 
 
+def alljobapplicants(request):
+    if request.user.is_authenticated:
+        
+        user_id=request.user.id
+        emp_profile_details=EmployeerProfile.objects.get(user_id=user_id)
+        emp_profile_id=emp_profile_details.id
 
+        applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=emp_profile_id)
+        jobdetails=Jobdetails.objects.all()
+        profiledetails=JobseekerProfile.objects.all()
+        context={
 
-
+            "applicationdetails":applicationdetails,
+            "jobdetails":jobdetails,
+            "profiledetails":profiledetails,
+        }
+        return render(request, 'employeer/alljobapplicants.html',context)
+    return redirect('loginpage')
 
 # Jobseeker Views
 
@@ -795,7 +811,7 @@ def appliedjobs(request):
     userid=request.user.id
     profileid=JobseekerProfile.objects.get(user_id=userid)
     appliedjobs = JobapplicationDetails.objects.filter(jobseekerprofile_id=profileid)
-   
+
 
 
     jobdetails=Jobdetails.objects.all()
@@ -803,14 +819,37 @@ def appliedjobs(request):
     context={
         "appliedjobs":appliedjobs,
         "jobdetails":jobdetails,
-        "employerprofile":empprofiledetails,  
+        "employerprofile":empprofiledetails, 
+        
     }
 
     return render(request,'jobseeker/appliedjobs.html',context)
 
-def appliedjobstatus(request):
+def appliedjobstatus(request,id):
+    user_id = request.user.id
+    profile = JobseekerProfile.objects.get(user_id=user_id)
+    profile_id=profile.id
+    jobdetails=Jobdetails.objects.get(job_id=id)
+    job_applications = JobapplicationDetails.objects.get(jobseekerprofile_id=profile_id,job_id=id)
+ 
+    employerid=jobdetails.cmp_id_id
+    employeedetails=EmployeerProfile.objects.all()
+    
+    context = {
+        "job_details": jobdetails,
+        "type":jobdetails.job_type,
+        "job_title":jobdetails.job_title,
+        "job_applications": job_applications,
+        "employeedetails":employeedetails,
+        "employerid":employerid,
+       
+    
+    }
 
-    return render(request,'jobseeker/appliedjobs.html')
+    return render(request, 'jobseeker/appliedjobstatus.html', context)
+
+
+
 
 
 

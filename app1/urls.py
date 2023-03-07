@@ -48,6 +48,7 @@ urlpatterns = [
 
     path('editprofile/<int:id>/',views.editemployeerprofile,name='editemployeerprofile'),
     path('profileverify/',views.profileverify,name='profileverify'),
+    path('employeer/alljobapplicants/',views.alljobapplicants,name='alljobapplicants'),
 
 
 
@@ -64,5 +65,7 @@ urlpatterns = [
     path('joblisting', views.joblisting, name='joblisting'),
     path('jobdetails/<int:id>', views.jobsindetail, name='jobsindetail'),
     path('appliedjobs', views.appliedjobs, name='appliedjobs'),
+    path('appliedjobstatus/<int:id>', views.appliedjobstatus, name='appliedjobstatus'),
+
     ]
  
