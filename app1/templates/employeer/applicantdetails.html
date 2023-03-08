@@ -1,0 +1,104 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Candidate Details</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'alljobapplicants' %}">All Candidates</a></li>
+                    <li class="breadcrumb-item"><a href="">Candidate</a></li>
+                   
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"></h4>
+                </div>
+                <div class="card-body">
+                               
+                                    
+                                        <div class="text-center">
+                                            <img class=" img-fluid" src="{{profilelogo.url}}" alt="" style="width: 200px; height: 200px;">
+                                            <h3 class="mb-3 me-4 mt-3">{{firstname}}  {{lastname}}</h3>
+
+                                            <button class="btn btn-success">Message</button>
+                                            
+                                            
+                                            <a href="{% url 'showpdf' appid %}" target="_blank" class="btn btn-info">View PDF</a>
+                                            
+                                        </div>
+                                        
+                                    
+                                        
+                                
+                                
+                                    
+                                
+                                
+                            
+    
+    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"></h4>
+                </div>
+                <div class="card-body"> 
+                    
+                        <h5><i data-feather="chevron-right" width="20"></i>Address       : {{fulladdress}}</h5>
+                        <h5><i data-feather="chevron-right" width="20"></i>Email         : {{email}}</h5>
+                        <h5><i data-feather="chevron-right" width="20"></i>Phone Number  : {{phone}}</h5>
+                        <h5><i data-feather="chevron-right" width="20"></i>Age           : {{age}}</h5>
+                        <h5><i data-feather="chevron-right" width="20"></i>Qualification : {{qualification}}</h5>
+                        <h5><i data-feather="chevron-right" width="20"></i>Applied Job :
+                            
+                                {% for j in jobdetails %}
+                                    {% if applictiondetails.job_id == j.job_id %}
+                                        {{j.job_title}}
+                                    {% endif %}
+                                {% endfor %}
+                          
+                        </h5>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+    
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+<script>
+    function viewPdf() {
+    // Get the URL of the PDF
+    var pdfUrl = "{{ resume.url }}";
+
+    // Open a new window with the PDF URL
+    var pdfWindow = window.open(pdfUrl, "_blank");
+
+    // Check if the window was opened successfully
+    if (!pdfWindow) {
+        alert("Unable to open PDF. Please check your browser settings.");
+    }
+}
+</script>
+
+
+{% endblock %}

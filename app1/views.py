@@ -15,6 +15,11 @@ from taggit.models import Tag, TaggedItem
 from django.core.paginator import Paginator
 import datetime
 
+from django.conf import settings
+from django.http import HttpResponse, Http404
+import os
+
+
 def index(request):
     return render(request,"home.html")
 
@@ -560,6 +565,45 @@ def alljobapplicants(request):
         return render(request, 'employeer/alljobapplicants.html',context)
     return redirect('loginpage')
 
+def applicantdetails(request,id,id2):
+    if request.user.is_authenticated:
+        profiledetails=JobseekerProfile.objects.get(id=id)
+        applicationdetails=JobapplicationDetails.objects.get(application_id=id2)
+        jobdetails=Jobdetails.objects.all()
+        # image_path = os.path.join(settings.MEDIA_ROOT, profiledetails.profile_photo.name)
+
+
+        context={
+            "profilelogo":profiledetails.profile_photo,
+            "firstname":profiledetails.first_name,
+            "lastname":profiledetails.last_name,
+            "email":profiledetails.email,
+            "phone":profiledetails.phone_number,
+            "age":profiledetails.age,
+            "qualification":profiledetails.highestqualification,
+            "fulladdress":profiledetails.fulladdress,
+            # "resume":resume_pdf,
+            "applictiondetails":applicationdetails,
+            "jobdetails":jobdetails,
+            "appid":applicationdetails.application_id
+          
+        }
+        return render(request, 'employeer/applicantdetails.html',context)
+    return redirect('loginpage')
+
+def showpdf(request, id):
+    applicationdetails = JobapplicationDetails.objects.get(application_id=id)
+    pdf_path = os.path.join(settings.MEDIA_ROOT, applicationdetails.applicant_resume.name)
+        
+    with open(pdf_path, 'rb') as pdf_file:
+        resume_pdf = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        resume_pdf['Content-Disposition'] = f'filename="{applicationdetails.applicant_resume.name}"'
+    
+    return resume_pdf
+    
+
+
+
 # Jobseeker Views
 
 
@@ -670,9 +714,6 @@ def joblisting(request):
             return render(request, 'jobseeker/jobs.html', context)
     else:
         return redirect('loginpage')
-
-
-
 
 
 def jobsindetail(request,id):
