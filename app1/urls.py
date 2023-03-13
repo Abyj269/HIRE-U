@@ -51,6 +51,7 @@ urlpatterns = [
     path('employeer/alljobapplicants/',views.alljobapplicants,name='alljobapplicants'),
     path('employeer/applicantdetails/<int:id>/<int:id2>',views.applicantdetails,name='applicantdetails'),
     path('add/showpdf/<int:id>/',views.showpdf,name='showpdf'),
+    path('chatbox/<int:id>/',views.chatbox,name='chatbox'),
 
 #Moderator Page URLS
 
@@ -66,6 +67,7 @@ urlpatterns = [
     path('jobdetails/<int:id>', views.jobsindetail, name='jobsindetail'),
     path('appliedjobs', views.appliedjobs, name='appliedjobs'),
     path('appliedjobstatus/<int:id>/', views.appliedjobstatus, name='appliedjobstatus'),
-
+    path('jobseekerchatbox/<int:id>/', views.jobseekerchatbox, name='jobseekerchatbox'),
+    path('premiumservices', views.premiumservices, name='premiumservices'),
     ]
  

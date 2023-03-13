@@ -575,6 +575,7 @@ def applicantdetails(request,id,id2):
 
         context={
             "profilelogo":profiledetails.profile_photo,
+            "profileid":id,
             "firstname":profiledetails.first_name,
             "lastname":profiledetails.last_name,
             "email":profiledetails.email,
@@ -591,6 +592,28 @@ def applicantdetails(request,id,id2):
         return render(request, 'employeer/applicantdetails.html',context)
     return redirect('loginpage')
 
+def chatbox(request,id):
+    if request.user.is_authenticated:
+        userid=request.user.id
+        empprofile=EmployeerProfile.objects.get(user_id=userid)
+        profiledetails=JobseekerProfile.objects.get(id=id)
+        context={
+            "profilelogo":profiledetails.profile_photo,
+            "profileid":id,
+            "firstname":profiledetails.first_name,
+            "lastname":profiledetails.last_name,
+            "loggeduserid":userid,
+            "senttouserid":profiledetails.user_id,
+            "empprofiledetails":empprofile,
+
+        }
+
+        return render(request, 'employeer/chatbox.html',context)
+    return redirect('loginpage')
+
+
+
+
 def showpdf(request, id):
     applicationdetails = JobapplicationDetails.objects.get(application_id=id)
     pdf_path = os.path.join(settings.MEDIA_ROOT, applicationdetails.applicant_resume.name)
@@ -600,7 +623,6 @@ def showpdf(request, id):
         resume_pdf['Content-Disposition'] = f'filename="{applicationdetails.applicant_resume.name}"'
     
     return resume_pdf
-    
 
 
 
@@ -889,9 +911,25 @@ def appliedjobstatus(request,id):
 
     return render(request, 'jobseeker/appliedjobstatus.html', context)
 
+def jobseekerchatbox(request,id):
+        userid=request.user.id
+        jobprofile=JobseekerProfile.objects.get(user_id=userid)
+        empprofiledetails=EmployeerProfile.objects.get(id=id)
+        context={
+            "profilelogo":jobprofile.profile_photo,
+            "profileid":id,
+            "companyname":empprofiledetails.company_name,
+            "companyphoto":empprofiledetails.company_logo,
+            "loggeduserid":userid,
+            "senttouserid":empprofiledetails.user_id,
+            "jobprofile":jobprofile,
+        }
 
+        return render(request,'jobseeker/jobseekerchatbox.html',context) 
 
-
+def premiumservices(request):
+    
+    return render(request,'jobseeker/premiumsevices.html') 
 
 
 #To render different User Home pages

@@ -29,7 +29,7 @@
                                             <img class=" img-fluid" src="{{profilelogo.url}}" alt="" style="width: 200px; height: 200px;">
                                             <h3 class="mb-3 me-4 mt-3">{{firstname}}  {{lastname}}</h3>
 
-                                            <button class="btn btn-success">Message</button>
+                                            <a href="{% url 'chatbox' profileid %}"class="btn btn-success">Message</a>
                                             
                                             
                                             <a href="{% url 'showpdf' appid %}" target="_blank" class="btn btn-info">View PDF</a>

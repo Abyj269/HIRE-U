@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [ 
+    'daphne',
+    'channels',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'app1',
     'django_filters',
     'taggit',
+    
 ]
 
 MIDDLEWARE = [
@@ -66,13 +69,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+               
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'Hireu.wsgi.application'
-
+# WSGI_APPLICATION = 'Hireu.wsgi.application'
+ASGI_APPLICATION = 'Hireu.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -127,6 +131,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer" # This Should Not for Production 
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],
+        # },
+    },
+}
 
 AUTH_USER_MODEL = 'app1.User'
 
