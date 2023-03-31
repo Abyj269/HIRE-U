@@ -17,8 +17,71 @@
 <div class="job_details_area">
     <div class="container">
         <div class="row">
+            <div class="col-md-4">
+                <div class="apply_job_form white-bg">
+                    <div class="col-md-12 mt-2">
+                        <img src="{% static 'jobseeker/img/Resumebuilder.jpg' %}" style="width:240px; height: 170px; border-radius: 5%;">
+                    </div>
+                    
+
+                    <div class="col-md-12 mt-5">
+                        <div class="submit_btn">
+                          <a href="{% url 'resumebuilderhomepage' %}" id="pay-btn" style="text-decoration: none;"><label class="boxed-btn3 w-100 " >Resume Builder</label></a>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <!-- <div class="col-md-4">
+                <div class="apply_job_form white-bg">
+                    <div class="col-md-12 mt-2">
+                        <img src="{% static 'jobseeker/img/Resumebuilder.jpg' %}" style="width:240px; height: 170px; border-radius: 5%;">
+                    </div>
+                    
+
+                    <div class="col-md-12 mt-5">
+                        <div class="submit_btn">
+                          <a href="{% url 'resumebuilderform' %}" style="text-decoration: none;"><label class="boxed-btn3 w-100 " >Resume Builder</label></a>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+         -->
+            
         </div>
     </div>
 </div>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    var options = {
+       
+      // Enter the Key ID generated from the Dashboard
+      key: "{{ razorpay_merchant_key }}",
+       
+      // Amount is in currency subunits.
+      // Default currency is INR. Hence,
+      // 50000 refers to 50000 paise
+      amount: "{{ razorpay_amount }}",
+      currency: "{{ currency }}",
+       
+      // Your/store name.
+      name: "Dj Razorpay",
+       
+      // Pass the `id` obtained in the response of Step 1
+      order_id: "{{ razorpay_order_id }}",
+      callback_url: "{{ callback_url }}",
+    };
+     
+    // initialise razorpay with the options.
+    var rzp1 = new Razorpay(options);
+     
+    // add event listener to the payment button.
+    document.getElementById("pay-btn").onclick = function (e) {
+      rzp1.open();
+      e.preventDefault();
+    };
+  </script>
 {% endblock %}

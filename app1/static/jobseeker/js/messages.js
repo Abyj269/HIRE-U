@@ -52,18 +52,7 @@ function newMessage(message,sent_by_id) {
     let message_element;
     if(sent_by_id == USER_ID)
     {
-        message_element= 
-        `   <div class="d-flex flex-row justify-content-end mb-4 pt-1 chat_user">
-                <div>
-                    <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">${message}</p>
-                </div>
-               
-            </div>
-            `;
-    }
-    else
-    {
-        message_element=`
+        message_element= `
         <div class="d-flex flex-row justify-content-start chat_reciever">
        
         <div>
@@ -73,7 +62,19 @@ function newMessage(message,sent_by_id) {
       </div>
         
         `;
+       
     }
+    else
+    {
+        message_element= `   <div class="d-flex flex-row justify-content-end mb-4 pt-1 chat_user">
+        <div>
+            <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">${message}</p>
+        </div>
+       
+    </div>
+    `;
+    }
+   
 
 
    

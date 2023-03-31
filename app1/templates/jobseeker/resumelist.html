@@ -1,0 +1,50 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h4>All Resumes</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5 mb-5 ">
+   {% for i in allresumes %}
+        <div class="row">
+            
+                <div class="col-lg-8 mt-2 mb-2">
+                    <div class="card shadow p-2" style="border-radius: 10px;">
+                        <div class="card-body" >
+                            <div class="row align-items-center align-items">
+                                <a href="" class="ml-5" style="text-decoration: none;"><h3 style="color: black;">{{i.resumetitle}}</h3></a>
+                                <div class="ml-5">
+                                   
+                                        <a href="{% url 'resumepreview' i.resume_id %}" style="text-decoration: none;" class="boxed-btn3 ml-2">View</a>
+                                        <a href="{}" style="text-decoration: none;" class="boxed-btn ml-2">Edit</a>
+                                        <a href="{% url 'deleteresume' i.resume_id %}" style="text-decoration: none;" class="boxed-btn2 ml-2">Delete</a>
+                                    
+                                </div>
+                                
+                                
+                            </div>
+                            
+                        </div>
+    
+                    </div>
+                </div>
+            
+            
+        </div>
+    {% endfor %}
+</div>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+{% endblock %}

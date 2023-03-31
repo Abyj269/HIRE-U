@@ -180,7 +180,32 @@ class JobapplicationDetails(models.Model):
     application_status = models.BooleanField('status', default=1)
     
     
-  
-    
-    
+class ResumeSchema(models.Model):
+
+    YEAR_CHOICES = [(year, year) for year in range(1900, 2100)]
+
+    resume_id=models.AutoField(primary_key=True)
+    resumetitle=models.CharField(max_length=500,null=True,blank=True)
+    jprofile = models.ForeignKey(JobseekerProfile, default=None, on_delete=models.CASCADE)
+    seekername=models.CharField(max_length=100,null=True,blank=True)
+    careerobjective=models.CharField(max_length=500,null=True,blank=True)
+    profilepicture= models.FileField(null=True, blank=True, upload_to='resumeprofile/')
+    projecttitle=models.CharField(max_length=100,null=True,blank=True)
+    projectdescription=models.CharField(max_length=500,null=True,blank=True)
+    address=models.CharField(max_length=255,null=True,blank=True)
+    phonenumber=models.CharField(blank=True, null=True,max_length=15)
+    collegename=models.CharField(max_length=255,null=True,blank=True)
+    coursename=models.CharField(max_length=255,null=True,blank=True)
+    passingyear = models.PositiveIntegerField(choices=YEAR_CHOICES,null=True,blank=True)
+    hssname=models.CharField(max_length=255,null=True,blank=True)
+    hssmarks=models.CharField(max_length=255,null=True,blank=True)
+    hssyear = models.PositiveIntegerField(choices=YEAR_CHOICES,null=True,blank=True)
+    tenthschoolname=models.CharField(max_length=255,null=True,blank=True)
+    tenthpassyear = models.PositiveIntegerField(choices=YEAR_CHOICES,null=True,blank=True)
+    tenthmarks=models.CharField(max_length=255,null=True,blank=True)
+    email=models.EmailField(blank=True,null=True)
+    skills=models.CharField(blank=True,null=True,max_length=200)
+
+    def __str__(self):
+        return self.resumetitle
 

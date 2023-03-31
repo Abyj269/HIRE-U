@@ -1,0 +1,60 @@
+{% extends 'employeer\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>All Jobs Posted</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'alljobsposted' %}">Jobsettings</a></li>
+                   
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Posted Jobs</h4>
+    </div>
+    <div class="card-body">
+        <table class='table table-bordered' id="table1">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Job Name</th>
+                    <!-- <th>Number of Applicants</th> -->
+                    <th>View All Applicants</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in jobdetails %}
+                <tr>
+                    <td>{{ forloop.counter }} </td>
+                    <td>{{i.job_title}}</td>
+                    <!-- <td>
+                        {% for key,value in counts.items %}
+                            {% if i.job_id == j %}
+                            {{ key }}: {{ value }}
+                            {% endif %}
+                        {% endfor %}
+                    </td> -->
+
+                    <!-- <td>{{counts}}</td> -->
+                    <td><a href="{% url 'specificapplicant' i.job_id %}" class="btn btn-success">View Applicants</a></td>
+                    
+                </tr>
+                {% endfor %}
+         
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

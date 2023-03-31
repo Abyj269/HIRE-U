@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
 from app1.models import candidateSkillsandTechnologies,JobapplicationDetails
 from django.contrib import messages
-from app1.models import Jobdetails,Qualifications,User
+from app1.models import Jobdetails,Qualifications,User,ResumeSchema
 from django.views import generic
 from django.urls import reverse
 from .models import Qualifications
@@ -14,10 +14,19 @@ from django.contrib.auth.decorators import login_required
 from taggit.models import Tag, TaggedItem
 from django.core.paginator import Paginator
 import datetime
-
+from .forms import ProfileForm
+from django.shortcuts import render
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
+from collections import Counter
 from django.conf import settings
 from django.http import HttpResponse, Http404
 import os
+from django.db.models import Q
+
+
 
 
 def index(request):
@@ -624,12 +633,82 @@ def showpdf(request, id):
     
     return resume_pdf
 
+def alljobsposted(request):
+    if request.user.is_authenticated:
+
+        userdetails =request.user.id;
+        jobdetails = Jobdetails.objects.filter(cmp_id_id=userdetails)
+        # sample=[jobdetails.job_id,]
+        sample = []
+        for jobdetail in jobdetails:
+            sample.append(jobdetail.job_id)
+
+        empprofileid = EmployeerProfile.objects.get(user_id=userdetails)
+        allapplicants =JobapplicationDetails.objects.filter(employerprofile_id=empprofileid).values_list("job_id",flat=True)
+        # counts=dict(Counter(allapplicants))
+        #print(type(counts))
+        counts={'a':1,'b':2}
+       
+        context={
+            "jobdetails":jobdetails,
+            "counts":counts,
+           
+        }
+        return render(request,"employeer/alljobsposted.html",context)
+    return redirect('loginpage')
+
+def specificapplicant(request,id):
+    if request.user.is_authenticated:
+        if request.method =='POST':
+            searched = request.POST['searched']
+            empid=request.user.id
+            empprofile=EmployeerProfile.objects.get(user_id=empid)
+            applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
+           
+            jobseeker=JobseekerProfile.objects.filter(highestqualification__contains=searched)
+           
+            # jobs=Jobdetails.objects.filter(job_title__contains=searched)
+            context={
+                'searched':searched,
+                'jobseeker':jobseeker,
+                'applicationdetails':applicationdetails,
+            }
+            # context={
+                
+            #     "jobdetails":jobdetails,
+            #     "employerprofile":empprofile,
+            #     "jobseeker":jobseeker,
+            # }
+
+
+            return render(request,"employeer/specificapplicant.html",context) 
+        else:
+            empid=request.user.id
+            empprofile=EmployeerProfile.objects.get(user_id=empid)
+            applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
+            jobseeker=JobseekerProfile.objects.all()
+            jobdetails=Jobdetails.objects.filter(job_id=id)
+            context={
+                "applicantdetails":applicationdetails,
+                "jobdetails":jobdetails,
+                "employerprofile":empprofile,
+                "jobseeker":jobseeker,
+            }
+
+
+            return render(request,"employeer/specificapplicant.html",context)
+    else:
+        return redirect('loginpage')
+
+
+
+
+
+
+
 
 
 # Jobseeker Views
-
-
-
 
 @login_required(login_url='/login')
 def candidatepage(request):
@@ -927,9 +1006,185 @@ def jobseekerchatbox(request,id):
 
         return render(request,'jobseeker/jobseekerchatbox.html',context) 
 
+
+def resumebuilderhomepage(request):
+    return render(request,"jobseeker/resumebldrhomepage.html")
+
+
+
+
+### Currently Payemnt Not Integrated
+
+
+razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+ 
+def payementdemo(request):
+    currency = 'INR'
+    amount = 20000  # Rs. 200
+ 
+    # Create a Razorpay Order
+    razorpay_order = razorpay_client.order.create(dict(amount=amount,currency=currency,payment_capture='0'))
+   
+    # order id of newly created order.
+    razorpay_order_id = razorpay_order['id']
+    callback_url = 'resumebuilderform/'
+ 
+    # we need to pass these details to frontend.
+    context = {}
+    context['razorpay_order_id'] = razorpay_order_id
+    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
+    context['razorpay_amount'] = amount
+    context['currency'] = currency
+    context['callback_url'] = callback_url
+ 
+    return render(request, 'jobseeker/premiumsevices.html', context=context)
+
+
+
+@csrf_exempt
+def paymenthandler(request):
+ 
+    # only accept POST request.
+    if request.method == "POST":
+        try:
+           
+            # get the required parameters from post request.
+            payment_id = request.POST.get('razorpay_payment_id', '')
+            razorpay_order_id = request.POST.get('razorpay_order_id', '')
+            signature = request.POST.get('razorpay_signature', '')
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': payment_id,
+                'razorpay_signature': signature
+            }
+ 
+            # verify the payment signature.
+            result = razorpay_client.utility.verify_payment_signature(
+                params_dict)
+            if result is not None:
+                amount = 20000  # Rs. 200
+                try:
+ 
+                    # capture the payemt
+                    razorpay_client.payment.capture(payment_id, amount)
+ 
+                    # render success page on successful caputre of payment
+                    # return render(request, 'jobseeker/paymentsuccess.html')
+                    return redirect('resumebuilderform')
+                except:
+ 
+                    # if there is an error while capturing payment.
+                    return render(request, 'paymentfail.html')
+            else:
+ 
+                # if signature verification fails.
+                return render(request, 'paymentfail.html')
+        except:
+ 
+            # if we don't find the required parameters in POST data
+            return HttpResponseBadRequest()
+    else:
+       # if other than POST request is made.
+        return HttpResponseBadRequest()
+    
+
+
+
+
+########End of Payment Code
+
+
 def premiumservices(request):
     
     return render(request,'jobseeker/premiumsevices.html') 
+
+def resumebuilderform(request):
+    context = {'YEAR_CHOICES': [(year, year) for year in range(1900, 2100)]}
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    resumetitle=request.POST.get('resumetitle')  
+    name = request.POST.get('name')    
+    careerobjective = request.POST.get('careerobjective') 
+    address = request.POST.get('address')    
+    phonenumber = request.POST.get('phonenumber') 
+    email = request.POST.get('email')    
+    skills= request.POST.get('skills') 
+    projecttitle=request.POST.get('projecttitle') 
+    projectdescription=request.POST.get('projectdescription') 
+    profilepic = request.FILES.get('profilepic')
+    collegename=request.POST.get('collegename') 
+    coursename=request.POST.get('coursename') 
+    passingyear = request.POST.get('passingyear')
+
+    twelthschoolname=request.POST.get('schoolname') 
+    twelthmarks=request.POST.get('hssmarks') 
+    twelthpassingyear = request.POST.get('yearcompletion')
+
+    tenthschoolname=request.POST.get('hsschoolname') 
+    tenthmarks=request.POST.get('tenthmarks') 
+    tenthpassingyear = request.POST.get('tenthpassingyear')
+
+    if request.method == 'POST':
+        resumedetails=ResumeSchema(
+            resumetitle=resumetitle,
+            seekername=name,
+            careerobjective=careerobjective,    
+            address=address,
+            phonenumber=phonenumber,
+            email=email,
+            skills=skills,
+            projecttitle=projecttitle,
+            projectdescription=projectdescription,
+            profilepicture=profilepic,
+            collegename=collegename,
+            coursename=coursename,
+            passingyear=passingyear,
+            hssname=twelthschoolname,
+            hssyear=twelthpassingyear,
+            hssmarks=twelthmarks,
+            tenthschoolname=tenthschoolname,
+            tenthpassyear=tenthpassingyear,
+            tenthmarks=tenthmarks,
+            jprofile_id=profileid.id
+        )
+        resumedetails.save()
+        value=ResumeSchema.objects.get(resume_id=resumedetails.pk)
+        messages.success(request,"Resume Created")
+        return redirect(reverse('resumepreview',args=[value.resume_id]))
+   
+
+        # return render(request, 'jobseeker/resumebuilderform.html',context)
+    # else:
+       
+    return render (request, 'jobseeker/resumebuilderform.html',context)
+
+def resumepreview(request, id): #show resume of requested id
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    allresumes = ResumeSchema.objects.get(jprofile_id=profileid.id,resume_id=id)
+    context={
+        "allresumes":allresumes
+    }
+    return render(request, 'jobseeker/resumepreview.html',context)
+
+def deleteresume(request,id):
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    allresumes = ResumeSchema.objects.get(jprofile_id=profileid.id,resume_id=id)
+    allresumes.delete()
+    return redirect(request.META.get('HTTP_REFERER'))
+    
+
+def resumelist(request): #show resume of requested id
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    allresumes = ResumeSchema.objects.filter(jprofile_id=profileid.id)
+    context={
+        "allresumes":allresumes
+    }
+    return render(request,'jobseeker/resumelist.html',context)
+
+
 
 
 #To render different User Home pages

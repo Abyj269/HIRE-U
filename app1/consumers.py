@@ -64,13 +64,13 @@ class ChatConsumer(AsyncConsumer):
             }
         )
 
-        await self.channel_layer.group_send(
-            self.chat_room,
-            {
-                'type': 'chat.message',
-                'text': json.dumps(response)
-            }
-        )
+        # await self.channel_layer.group_send(
+        #     self.chat_room,
+        #     {
+        #         'type': 'chat.message',
+        #         'text': json.dumps(response)
+        #     }
+        # )
         
 
     async def websocket_disconnect(self,event):

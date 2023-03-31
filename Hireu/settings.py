@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'django_filters',
     'taggit',
     
+    
 ]
+SECURE_CROSS_ORIGIN_OPENER_POLICY='same-orgin-allow-popups'
+RAZOR_KEY_ID = "rzp_test_3MbLCGKHWkaLe8"
+RAZOR_KEY_SECRET = "kpFNsgx0VB4XamwwZfX03BZw"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

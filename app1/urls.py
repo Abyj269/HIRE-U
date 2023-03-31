@@ -53,6 +53,10 @@ urlpatterns = [
     path('add/showpdf/<int:id>/',views.showpdf,name='showpdf'),
     path('chatbox/<int:id>/',views.chatbox,name='chatbox'),
 
+    path('alljobsposted/',views.alljobsposted,name='alljobsposted'),
+    path('specificapplicant/<int:id>/',views.specificapplicant,name='specificapplicant'),
+    
+
 #Moderator Page URLS
 
     path('employerslist', views.employerslist, name='employerslist'),
@@ -69,5 +73,13 @@ urlpatterns = [
     path('appliedjobstatus/<int:id>/', views.appliedjobstatus, name='appliedjobstatus'),
     path('jobseekerchatbox/<int:id>/', views.jobseekerchatbox, name='jobseekerchatbox'),
     path('premiumservices', views.premiumservices, name='premiumservices'),
+    path('resumebuilderform/', views.resumebuilderform, name='resumebuilderform'),
+    path('resumepreview/<int:id>/', views.resumepreview, name='resumepreview'),
+    path('payementdemo', views.payementdemo, name='payementdemo'),
+    path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+    path('resumebuilderhomepage/', views.resumebuilderhomepage, name='resumebuilderhomepage'),
+    path('resumelist/', views.resumelist, name='resumelist'),
+    path('deleteresume/<int:id>/', views.deleteresume, name='deleteresume'),
+
     ]
  

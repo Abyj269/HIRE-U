@@ -20,6 +20,7 @@ var socket=new WebSocket(endpoint)
 socket.onopen =async function(event)
 {
     console.log('open',event)
+    
 }
 
 socket.onmessage =async function(messageEvent)
@@ -50,16 +51,6 @@ function newMessage(message,sent_by_id) {
     if(sent_by_id == USER_ID)
     {
         message_element= 
-        `<div class="chat">
-            <div class="chat-body">
-                <div class="chat-message">${message}</div>
-            </div>
-        </div>
-        `;
-    }
-    else
-    {
-        message_element=
         `
         <div class="chat chat-left">
             <div class="chat-body">
@@ -68,7 +59,20 @@ function newMessage(message,sent_by_id) {
         </div>
         
         `;
+        
     }
+    else
+    {
+        message_element=
+        `<div class="chat">
+            <div class="chat-body">
+                <div class="chat-message">${message}</div>
+            </div>
+        </div>
+        `;
+        
+    }
+    
 
 
 
