@@ -31,22 +31,66 @@
                                             <div class="row">
                                                 <a href="{% url 'chatbox' profileid %}"class="btn btn-success col-lg-4">Message</a>
                                                 <a href="{% url 'showpdf' appid %}" target="_blank" class="btn btn-info col-lg-4">View PDF</a>
-                                                <a href="" target="_blank" class="btn btn-warning col-lg-4">Schedule</a>
+                                                <a href=""  class="btn btn btn-warning col-lg-4" data-toggle="modal" data-target="#inlineForm">Schedule</a> 
                                             </div>
-                                            
-                                            
                                         </div>
-                                        
-                                    
-                                        
-                                
-                                
-                                    
-                                
-                                
-                            
-    
-    
+
+                                        <div class="modal fade text-left" id="inlineForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title" id="myModalLabel33">Schedule Interview</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i data-feather="x"></i></button>
+                                                    </div>
+                                                    <form action="{% url 'addscheduleinterview' %}" method="post">
+                                                        <div class="modal-body">
+                                                            <!-- <label>Email: </label>
+                                                                <div class="form-group">
+                                                                    <input type="text" placeholder="Email Address" class="form-control">
+                                                                </div>
+                                                            <label>Password: </label>
+                                                                <div class="form-group">
+                                                                    <input type="password" placeholder="Password" class="form-control">
+                                                                </div> -->
+                                                            <div class="row">
+                                                                <div class="form-group">
+                                                                    <label for="duration" >Time Duration : </label>
+                                                                    <select name="duration" id="duration" class="form-control" required>
+                                                                      <option value="1hr">1hr</option>
+                                                                      <option value="30 min">30 min</option>
+                                                                      <option value="More than 1hr">More than 1hr</option>
+                                                                    </select>
+                                                                </div>
+                                                               <div class="form-group">
+                                                                    <label for="type">Type :  </label>
+                                                                    <select name="interviewtype" id="type" class="form-control" required>
+                                                                        <option value="technical">Online Interview</option>
+                                                                        <option value="direct">Walk-in Interview</option>
+                                                                    </select>
+                                                               </div>
+                                                               <div class="form-group">
+                                                                    <label for="timeanddate">Time : </label>
+                                                                        <input type="datetime-local" class="form-control" id="timeanddate" name="timeanddate"><br><br>
+                                                                        <input type="text" value={{i.application_id}} name="applicationid" hidden>
+                                                               </div>
+                                                                
+                                                                
+
+                                                            </div>
+                                                                
+                                                                
+                                                                
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light-secondary" data-dismiss="modal"><i class="bx bx-x d-block d-sm-none"></i><span class="d-none d-sm-block">Close</span></button>
+                                                            <button type="submit" class="btn btn-danger ml-1" data-dismiss="modal"><i class="bx bx-check d-block d-sm-none"></i><span class="d-none d-sm-block">Schedule</span></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                 </div>
             </div>
         </div>

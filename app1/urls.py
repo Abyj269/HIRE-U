@@ -55,7 +55,7 @@ urlpatterns = [
 
     path('alljobsposted/',views.alljobsposted,name='alljobsposted'),
     path('specificapplicant/<int:id>/',views.specificapplicant,name='specificapplicant'),
-    
+    path('addscheduleinterview/', views.addscheduleinterview, name='addscheduleinterview'),
 
 #Moderator Page URLS
 
@@ -64,6 +64,10 @@ urlpatterns = [
     path('employerdetails/<int:id>/', views.employerdetails, name='employerdetails'),
     path('accept/<int:id>/', views.accept, name='accept'),
     path('reject/<int:id>/', views.reject, name='reject'),
+    path('allpayements', views.allpayements, name='allpayements'),
+    path('statistics', views.statistics, name='statistics'),
+    path('reports', views.reports, name='reports'),
+
 
 #Jobseeker Page Urls
     path('editprofile', views.editprofile, name='editprofile'),
@@ -75,11 +79,14 @@ urlpatterns = [
     path('premiumservices', views.premiumservices, name='premiumservices'),
     path('resumebuilderform/', views.resumebuilderform, name='resumebuilderform'),
     path('resumepreview/<int:id>/', views.resumepreview, name='resumepreview'),
-    path('payementdemo', views.payementdemo, name='payementdemo'),
-    path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+   
     path('resumebuilderhomepage/', views.resumebuilderhomepage, name='resumebuilderhomepage'),
     path('resumelist/', views.resumelist, name='resumelist'),
     path('deleteresume/<int:id>/', views.deleteresume, name='deleteresume'),
+    # path('paymenthandler/', views.paymenthandler, name='paymenthandler'),
+    path('payementpage/', views.payementpage, name='payementpage'),
+    path('verifypayment/', views.verifypayment, name='verifypayment'),
+    path('userpaymentdetails/', views.userpaymentdetails, name='userpaymentdetails'),
 
-    ]
+     ]
  

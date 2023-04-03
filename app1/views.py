@@ -4,9 +4,9 @@ from django.contrib.auth import authenticate,login,logout
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
-from app1.models import candidateSkillsandTechnologies,JobapplicationDetails
+from app1.models import candidateSkillsandTechnologies,JobapplicationDetails,Interviewscheduling
 from django.contrib import messages
-from app1.models import Jobdetails,Qualifications,User,ResumeSchema
+from app1.models import Jobdetails,Qualifications,User,ResumeSchema,PayementDetails
 from django.views import generic
 from django.urls import reverse
 from .models import Qualifications
@@ -659,20 +659,20 @@ def alljobsposted(request):
 
 def specificapplicant(request,id):
     if request.user.is_authenticated:
-        if request.method =='POST':
-            searched = request.POST['searched']
-            empid=request.user.id
-            empprofile=EmployeerProfile.objects.get(user_id=empid)
-            applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
+        # if request.method =='POST':
+        #     searched = request.POST['searched']
+        #     empid=request.user.id
+        #     empprofile=EmployeerProfile.objects.get(user_id=empid)
+        #     applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
            
-            jobseeker=JobseekerProfile.objects.filter(highestqualification__contains=searched)
+        #     jobseeker=JobseekerProfile.objects.filter(highestqualification__contains=searched)
            
             # jobs=Jobdetails.objects.filter(job_title__contains=searched)
-            context={
-                'searched':searched,
-                'jobseeker':jobseeker,
-                'applicationdetails':applicationdetails,
-            }
+            # context={
+            #     'searched':searched,
+            #     'jobseeker':jobseeker,
+            #     'applicationdetails':applicationdetails,
+            # }
             # context={
                 
             #     "jobdetails":jobdetails,
@@ -681,8 +681,8 @@ def specificapplicant(request,id):
             # }
 
 
-            return render(request,"employeer/specificapplicant.html",context) 
-        else:
+        #     return render(request,"employeer/specificapplicant.html",context) 
+        # else:
             empid=request.user.id
             empprofile=EmployeerProfile.objects.get(user_id=empid)
             applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
@@ -700,6 +700,24 @@ def specificapplicant(request,id):
     else:
         return redirect('loginpage')
 
+
+def addscheduleinterview(request):
+    if request.method == 'POST':
+        duration = request.POST.get('duration')
+        interviewtype = request.POST.get('interviewtype')
+        timeanddate = request.POST.get('timeanddate')
+        applicationid = request.POST.get('applicationid')
+        interviewdetails = Interviewscheduling(
+            time_duration=duration,
+            interview_type=interviewtype,
+            interview_timeanddate=timeanddate,
+            application_id=applicationid,
+        )
+        interviewdetails.save()
+        return JsonResponse({'status': 'Success'})
+    else:
+        return JsonResponse({'status': 'Error'})
+   
 
 
 
@@ -759,7 +777,7 @@ def candidatepage(request):
 
             
 #     return redirect('loginpage')
-
+"""
 def joblisting(request):
     if request.user.is_authenticated:
         
@@ -815,6 +833,72 @@ def joblisting(request):
             return render(request, 'jobseeker/jobs.html', context)
     else:
         return redirect('loginpage')
+"""
+
+
+def joblisting(request):
+    if request.user.is_authenticated:
+        userid = request.user.id
+        jobseekerprofile = JobseekerProfile.objects.get(user_id=userid)
+        profile_id = jobseekerprofile.id  
+
+        try:
+            jobseekerskills = candidateSkillsandTechnologies.objects.get(id=profile_id)
+            jobseeker_skills = jobseekerskills.skill_name
+            jobseeker_skill_list = [s.strip() for s in jobseeker_skills.split(',')]
+        except candidateSkillsandTechnologies.DoesNotExist:
+            jobseeker_skill_list = []
+
+        if request.method == 'POST':
+            searched = request.POST['searched']
+            jobs = Jobdetails.objects.filter(job_title__contains=searched)
+            profiledetails = EmployeerProfile.objects.all()
+            context = {
+                'searched': searched,
+                'jobs': jobs,
+                'profiledetails': profiledetails,
+            }
+            return render(request, 'jobseeker/jobs.html', context) 
+        else:
+            applied_jobs = JobapplicationDetails.objects.filter(jobseekerprofile=jobseekerprofile).values_list('job_id', flat=True)
+            jobdetails = Jobdetails.objects.exclude(job_id__in=applied_jobs)
+
+            job_details_dict = {}
+            for job in jobdetails:
+                job_skills = [s.strip() for s in job.specialisation.split(',')]
+                matching_skills = set(job_skills) & set(jobseeker_skill_list)
+                matching_score = len(matching_skills) / len(job_skills) * 100 if job_skills else 0
+                job_details_dict[job] = matching_score
+            sorted_job_details = sorted(job_details_dict.items(), key=lambda x: x[1], reverse=True)
+            sorted_jobs = [job for job, _ in sorted_job_details]
+
+            p = Paginator(sorted_jobs,4)
+            page=request.GET.get('page')
+            jos=p.get_page(page)
+
+            profiledetails = EmployeerProfile.objects.all()
+            context = {
+                'jobdetails': jos,
+                'profiledetails': profiledetails,
+                'pages':jos
+            }
+            return render(request, 'jobseeker/jobs.html', context)
+    else:
+        return redirect('loginpage')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def jobsindetail(request,id):
@@ -1018,74 +1102,72 @@ def resumebuilderhomepage(request):
 
 razorpay_client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
  
-def payementdemo(request):
-    currency = 'INR'
-    amount = 20000  # Rs. 200
- 
-    # Create a Razorpay Order
-    razorpay_order = razorpay_client.order.create(dict(amount=amount,currency=currency,payment_capture='0'))
-   
-    # order id of newly created order.
-    razorpay_order_id = razorpay_order['id']
-    callback_url = 'resumebuilderform/'
- 
-    # we need to pass these details to frontend.
-    context = {}
-    context['razorpay_order_id'] = razorpay_order_id
-    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
-    context['razorpay_amount'] = amount
-    context['currency'] = currency
-    context['callback_url'] = callback_url
- 
-    return render(request, 'jobseeker/premiumsevices.html', context=context)
+def payementpage(request):
+    userid=request.user.id
+    profiledetails=JobseekerProfile.objects.get(user_id=userid)
+    payementdetails=PayementDetails.objects.get(profile_id=userid)
+    profile_id=profiledetails.id
+    if (payementdetails.paid==1):
+        return redirect('resumebuilderhomepage')
+    else:
+        amount=30000
+        client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+        response_payment=client.order.create(dict(amount=amount,currency='INR',payment_capture=1))
+        order_id=response_payment['id']
+        context={
+            'amount':amount,
+            'api_key':settings.RAZOR_KEY_ID,
+            'order_id':order_id,
+            'username': profiledetails.first_name,
+            'profileid':profile_id,
+            'userid':userid
+        }
+        print(response_payment)
+        return render(request,'jobseeker/payementpage.html',context)
 
 
-
-@csrf_exempt
-def paymenthandler(request):
- 
-    # only accept POST request.
-    if request.method == "POST":
+def verifypayment(request):
+    if request.method == 'POST':
+        razorpay_payment_id = request.POST.get('razorpay_payment_id')
+        razorpay_order_id = request.POST.get('razorpay_order_id')
+        razorpay_signature = request.POST.get('razorpay_signature')
+        amount=request.POST.get('amount')
+        amount=int(amount)/100
+        username= request.POST.get('username')
+        userid=request.POST.get('userid')
+        client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
         try:
-           
-            # get the required parameters from post request.
-            payment_id = request.POST.get('razorpay_payment_id', '')
-            razorpay_order_id = request.POST.get('razorpay_order_id', '')
-            signature = request.POST.get('razorpay_signature', '')
             params_dict = {
                 'razorpay_order_id': razorpay_order_id,
-                'razorpay_payment_id': payment_id,
-                'razorpay_signature': signature
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_signature': razorpay_signature
             }
- 
-            # verify the payment signature.
-            result = razorpay_client.utility.verify_payment_signature(
-                params_dict)
-            if result is not None:
-                amount = 20000  # Rs. 200
-                try:
- 
-                    # capture the payemt
-                    razorpay_client.payment.capture(payment_id, amount)
- 
-                    # render success page on successful caputre of payment
-                    # return render(request, 'jobseeker/paymentsuccess.html')
-                    return redirect('resumebuilderform')
-                except:
- 
-                    # if there is an error while capturing payment.
-                    return render(request, 'paymentfail.html')
-            else:
- 
-                # if signature verification fails.
-                return render(request, 'paymentfail.html')
+            client.utility.verify_payment_signature(params_dict)
+            PayementDetails.objects.filter(profile_id=userid).update(
+                user_name=username,
+                order_id=razorpay_order_id,
+                productname="Resume Builder",
+                amount=amount,
+                razorpay_payment_id=razorpay_payment_id,
+                paid=1,
+                )
+                
+            return JsonResponse({'status': 'Success'})
         except:
- 
-            # if we don't find the required parameters in POST data
-            return HttpResponseBadRequest()
+            return  JsonResponse({'status': 'Verification failed'})
+           # return HttpResponse("Payment verification failed")
     else:
-       # if other than POST request is made.
-        return HttpResponseBadRequest()
+        return HttpResponse("Invalid request method")
+
+
+    
+
+@csrf_exempt
+def success(request):
+    return render(request,"success.html")
+
+
+    
     
 
 
@@ -1095,7 +1177,6 @@ def paymenthandler(request):
 
 
 def premiumservices(request):
-    
     return render(request,'jobseeker/premiumsevices.html') 
 
 def resumebuilderform(request):
@@ -1183,6 +1264,18 @@ def resumelist(request): #show resume of requested id
         "allresumes":allresumes
     }
     return render(request,'jobseeker/resumelist.html',context)
+
+def userpaymentdetails(request):
+
+    userid=request.user.id
+    # userpayementdetails=PayementDetails.objects.filter(profile_id=userid)
+    query = Q(razorpay_payment_id__isnull=False) & Q(order_id__isnull=False) & Q(profile_id=userid)
+    userpayementdetails = PayementDetails.objects.filter(query)
+    context={
+        "userpayementdetails":userpayementdetails
+    }
+    
+    return render(request,'jobseeker/userpaymentdetails.html',context)
 
 
 
@@ -1284,4 +1377,21 @@ def reject(request,id):
 
     return redirect(request.META.get('HTTP_REFERER'))
 
+
+
+def allpayements(request):
+
+    query = Q(razorpay_payment_id__isnull=False) & Q(order_id__isnull=False)
+    results = PayementDetails.objects.filter(query)
+    context={
+        "results":results
+    }
+    return render(request,'moderator/allpayements.html',context)
+
+def statistics(request):
+    return render(request,'moderator/statisticshome.html')
+
+
+def reports(request):
+    return render(request,'moderator/reportshome.html')
 

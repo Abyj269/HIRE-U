@@ -1,0 +1,131 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h3>{{jobtitle}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="job_details_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="apply_job_form white-bg">
+                    <div class="col-md-12 mt-2">
+                    <form method="POST">
+                        <input type="Number" value="300" name="amount" hidden>
+                        <a class="boxed-btn3 w-100" id="rzp-button1">Proceed to Pay</a>
+                    </form>
+                        {% comment %} <button id="rzp-button1">Pay</button> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script>
+    var options = {
+        "key": "{{api_key}}", // Enter the Key ID generated from the Dashboard
+        "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "Hireu Portal", //your business name
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            //alert(response.razorpay_payment_id);
+            //alert(response.razorpay_order_id);
+            //alert(response.razorpay_signature)
+           //window.location.href = "/resumebuilderform/";
+           $.ajax({
+            url: "/verifypayment/",
+            type: "POST",
+            data: 
+                {
+                    razorpay_payment_id: response.razorpay_payment_id, 
+                    razorpay_order_id:response.razorpay_order_id,
+                    razorpay_signature:response.razorpay_signature,
+                    amount: "{{amount}}", 
+                    order_id: "{{order_id}}",
+                    username:"{{username}}",
+                    userid:"{{userid}}"
+                },
+            beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function(data){
+                if(data.status == "Success"){
+                    // Redirect to the resumebuilderform page
+                    window.location.href = "/resumebuilderhomepage/";
+                }else{
+                    // Display error message
+                    alert(data.message);
+                }
+            },
+            error: function(){
+                alert("Error occurred while verifying the payment. Please try again later.");
+            }
+        });
+    },
+        "prefill": {
+            "name": "Aby Jose", //your customer's name
+            "email": "myc34413@gmail.com",
+            "contact": "9000090000"
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+
+    }
+    
+
+ 
+function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+     
+
+
+
+</script>
+
+
+
+
+
+
+
+{% endblock %}

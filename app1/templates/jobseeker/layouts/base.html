@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'jobseeker\css\tagsinput.css' %}" />
-
+    
 </head>
 
 <body>
@@ -69,7 +69,13 @@
                                             </li>
                                             <li><a href="{% url 'editprofile' %}">Profile</a></li>
                                             <li><a href="{% url 'premiumservices' %}">Premium Services</a></li>
-                                            <li><a href="">Settings</a></li>
+                                            <li><a href="">Settings</a>
+                                                <ul class="submenu">
+                                                    <li><a href="">Notifications</a></li>
+                                                    <li><a href="{% url 'userpaymentdetails' %}">Payement Information</a></li>
+                                                </ul>
+                                                
+                                            </li>
                                             <!-- <li><a href="#">pages <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
                                                     <li><a href="candidate.html">Candidates </a></li>
@@ -831,7 +837,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="{% static 'jobseeker\js\tagsinput.js' %}"></script>

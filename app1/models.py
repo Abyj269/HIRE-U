@@ -43,10 +43,10 @@ class Jobseeker(User):
 
 
 @receiver(post_save, sender=Jobseeker)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile_and_paymentdetails(sender, instance, created, **kwargs):
     if created and instance.role == "JOBSEEKER":
         JobseekerProfile.objects.create(user=instance)
-
+        PayementDetails.objects.create(profile=instance)
 
 class JobseekerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -209,3 +209,38 @@ class ResumeSchema(models.Model):
     def __str__(self):
         return self.resumetitle
 
+class Interviewscheduling(models.Model):
+    interview_schuduling_id=models.AutoField(primary_key=True)
+    time_duration=models.CharField(max_length=255,null=True,blank=True)
+    interview_type=models.CharField(max_length=255,null=True,blank=True)
+    interview_timeanddate=models.DateTimeField(null=True,blank=True)
+    application=models.ForeignKey(JobapplicationDetails,default=None, on_delete=models.CASCADE)
+
+# class scheduling(models.Model):
+# sche_id = models.AutoField(primary_key=True)
+# status=models.BooleanField('status', default=True) 
+# user_id=models.ForeignKey(User ,default=None,on_delete=models.CASCADE)
+# com_id=models.IntegerField(blank=True, null=True)
+# typp=models.CharField(max_length=100,null=True)
+# dura=models.CharField(max_length=100,null=True)
+# train_date =  models.DateTimeField()
+# acc=models.BooleanField('status', default=False) 
+# dec=models.BooleanField('status', default=True) 
+# reason=models.TextField(null=True,blank=True)
+# can_date =  models.DateTimeField(null=True)
+# approvedd=models.BooleanField('approveds', default=False)
+        
+
+#         @property
+#         def name(self):
+#             return self.user_id.username
+
+
+class PayementDetails(models.Model):
+    user_name=models.CharField(max_length=255,null=True,blank=True)
+    profile=models.OneToOneField(User, on_delete=models.CASCADE,null=True)
+    amount=models.CharField(max_length=100,null=True,blank=True)
+    order_id=models.CharField(max_length=255,null=True,blank=True)
+    razorpay_payment_id=models.CharField(max_length=100,null=True,blank=True)
+    paid=models.BooleanField(default=False)
+    productname=models.CharField(max_length=100,null=True,blank=True)

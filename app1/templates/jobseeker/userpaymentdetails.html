@@ -1,0 +1,55 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            {% comment %} <div class="col-xl-12">
+                <div class="bradcam_text">
+                   
+                </div>
+            </div> {% endcomment %}
+        </div>
+    </div>
+</div>
+
+
+<div class="job_listing_area plus_padding">
+    <div class="container">
+        <div class="row card shadow p-3">
+            <div class="card-body">
+                <h4 class="mb-3">Your Purchases</h4>
+                {% if userpayementdetails %}
+                    <table class='table table-bordered' id="table1">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Product Name</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in userpayementdetails %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.productname}}</td>
+                                <td>{{i.order_id}}</td>
+                                <td>{{i.amount}}</td>
+
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+
+                {% else %}
+                    <p>No Purchases</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,13 +21,14 @@
     <div class="card-header">
         <h4 class="card-title">Applicants</h4>
     </div>
-    <div class="ml-4">
-        <form method="post" id="search-form" action="">
+    
+    {% comment %} <div class="ml-4"> {% endcomment %}
+        {% comment %} <form method="post" id="search-form" action="">
             {% csrf_token %}
     
-        <div class="row mb-3 align-items-end">
+        <div class="row mb-3 align-items-end"> {% endcomment %}
             
-            <div class="col-lg-8">
+            <!-- <div class="col-lg-8">
                 <div class="input-group d-md-flex">
                     <input class="form-control" type="search" aria-label="Search" id="search_text" placeholder="Search" name="searched">
                     <div class="input-group-append">
@@ -36,15 +37,17 @@
                    
                    
                 </div>
-            </div>
-        </div>
-        </form>
-    </div>
+            </div> 
+        -->
+        {% comment %} </div>
+        </form> {% endcomment %}
+    {% comment %} </div> {% endcomment %}
         
 
-
     <div class="card-body">
+        
         <table class='table table-bordered' id="table1">
+        {% if applicantdetails %}
             <thead>
                 <tr>
                     <th>S.No</th>
@@ -53,7 +56,7 @@
                     <th>View</th>
                 </tr>
             </thead>
-            {% if applicantdetails %}
+            
             <tbody>
                 {% for i in applicantdetails %}
                     {% for j in jobdetails %}
@@ -61,59 +64,83 @@
                             <tr>
                                 <td>{{forloop.counter}} </td>
                                 <td> 
-                                {% for k in jobseeker %}
-                                    {% if k.id == i.jobseekerprofile_id %}
-                                        {{k.first_name}}   {{k.last_name}} 
-                                    {% endif %}                                    
-                                {% endfor %}
+                                  {% for k in jobseeker %}
+                                      {% if k.id == i.jobseekerprofile_id %}
+                                          {{k.first_name}}   {{k.last_name}} 
+                                      {% endif %}                                    
+                                  {% endfor %}
                                 </td>
                                 <td>
-                                {% for l in jobseeker %}
-                                    {% if l.id == i.jobseekerprofile_id %}
-                                        <img src="{{l.profile_photo.url}}" style="width: 75px;height: 75px;">
-                                    {% endif %}                                    
-                                {% endfor %}
+                                  {%  for l in jobseeker %}
+                                      {% if l.id == i.jobseekerprofile_id %}
+                                          <img src="{{l.profile_photo.url}}" style="width: 75px;height: 75px;">
+                                      {% endif %}                                    
+                                  {% endfor %}
                                 </td>
 
-                                <!-- <td>{{counts}}</td> -->
+                                
                                 <td>
                                     {% for l in jobseeker %}
                                         {% if l.id == i.jobseekerprofile_id %}
                                             <a href="{% url 'applicantdetails' l.id i.application_id %}" class="btn btn-success">View</a>
-                                            <a href="" target="_blank" class="btn btn-warning">Schedule Interview</a>
                                         {% endif %}                                    
                                     {% endfor %}
+                                </td>
                             </tr>
-                        {%  endif %}
+                      {%  endif %}
                     {% endfor %}
                 {% endfor %}
             </tbody>
-            {%  elif searched %}
-                <tbody>
-                    {% for i in jobseeker %}
-                            <tr>
-                                <td>{{forloop.counter}} </td>
-                                <td> 
-                                {{i.first_name}}
-                                </td>
-                                <td>
-                                   
-                                            <img src="{{i.profile_photo.url}}" style="width: 75px;height: 75px;">
-                                       
-                                </td>
-
-                               
-                                <td>
-                                    
-                                            <!-- <a href="{% url 'applicantdetails' i.id l.application_id %}" class="btn btn-success">View</a> -->
-                                        
-                            </tr>
-                    {% endfor %}     
-                </tbody>
-            {% endif %}
+        {% endif %} 
         </table>
+        
+                
     </div>
 
+
+    <script>
+        //console.log("Hai");
+
+        {% comment %} $("#schedulebutton").on("click",function(e)
+        {
+            console.log("Hai");
+        }) {% endcomment %}
+        $('.schedule-form').submit(function(e) {
+          console.log("Hai");
+          e.preventDefault();
+          $.ajax({
+            url: "/addscheduleinterview/",
+            type: "POST",
+            data: $(this).serialize(),
+            beforeSend: function(xhr) {
+              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function(data) {
+              if (data.status == "Success") {
+                // do something
+              } else {
+                alert(data.message);
+              }
+            },
+            error: function() {
+              alert("");
+            }
+          });
+        });
+
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+          }
+             
+      </script>
+
+
+    
+
+    
 
 </div>
 {% endblock %}

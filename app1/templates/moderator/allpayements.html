@@ -1,0 +1,76 @@
+{% extends 'moderator\layouts\base.html' %}
+{% block content %}
+<div class="page-title">
+    <div class="row">
+        <div class="col-12 col-md-6 order-md-1 order-las">
+            <h3>Payment Details</h3>
+        </div>
+        
+        <div class="col-12 col-md-6 order-md-2 order-first">
+            <nav aria-label="breadcrumb" class='breadcrumb-header'>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'allpayements' %}">Payements</a></li>
+                </ol>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+
+    <div class="container">
+        <div class="row ">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Payment Details</h4>
+                </div>
+                
+                <div class="card-body">
+                    
+                    <table class='table table-bordered' id="table1">
+                        <thead>
+                            
+                        
+                            <tr>
+                                <th>S.No</th>
+                                <th>Username</th>
+                                <th>Amount</th>
+                                <th>Order ID</th>
+                                <th>Razorpay Payment ID</th>
+                                <th>Product Name</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                      
+                        {% for i in results %}    
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.user_name}}</td>
+                                <td>{{i.amount}}</td>
+                                <td>{{i.order_id}}</td>   
+                                <td>{{i.razorpay_payment_id}}</td>
+                                <td><b>{{i.productname}}</b></td> 
+                                <td> {% if i.paid == 0 %}
+                                    <span class="badge bg-danger">Not Paid</span>
+                                    {% else %}
+                                    <span class="badge bg-success">Paid</span>
+                                    {% endif %}
+                                </td> 
+                                
+                                
+                            </tr>
+                
+                     
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                   
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}

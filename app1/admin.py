@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 
 from .models import User,Qualifications,EmployeerProfile,Verificationdetails,Jobdetails,JobseekerProfile,candidateSkillsandTechnologies
-from .models import JobapplicationDetails,ResumeSchema
+from .models import JobapplicationDetails,ResumeSchema,Interviewscheduling,PayementDetails
 from taggit.models import Tag
 
 admin.site.register(User)
@@ -17,4 +17,6 @@ admin.site.register(candidateSkillsandTechnologies)
 
 admin.site.register(JobapplicationDetails)
 admin.site.register(ResumeSchema)
+admin.site.register(Interviewscheduling)
+admin.site.register(PayementDetails)
 
