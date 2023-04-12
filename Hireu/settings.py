@@ -49,6 +49,10 @@ INSTALLED_APPS = [
 SECURE_CROSS_ORIGIN_OPENER_POLICY='same-orgin-allow-popups'
 RAZOR_KEY_ID = "rzp_test_3MbLCGKHWkaLe8"
 RAZOR_KEY_SECRET = "kpFNsgx0VB4XamwwZfX03BZw"
+OPENAI_SECRET_KEY = "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"
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

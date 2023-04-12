@@ -56,7 +56,7 @@ urlpatterns = [
     path('alljobsposted/',views.alljobsposted,name='alljobsposted'),
     path('specificapplicant/<int:id>/',views.specificapplicant,name='specificapplicant'),
     path('addscheduleinterview/', views.addscheduleinterview, name='addscheduleinterview'),
-
+    path('rescheduleinterview/<int:id>/', views.rescheduleinterview, name='rescheduleinterview'),
 #Moderator Page URLS
 
     path('employerslist', views.employerslist, name='employerslist'),
@@ -87,6 +87,11 @@ urlpatterns = [
     path('payementpage/', views.payementpage, name='payementpage'),
     path('verifypayment/', views.verifypayment, name='verifypayment'),
     path('userpaymentdetails/', views.userpaymentdetails, name='userpaymentdetails'),
+
+    path('coverletterhomepage/', views.coverletterhomepage, name='coverletterhomepage'),
+    path('coverletterform/',views.coverletterform,name='coverletterform'),
+    path('allcoverletter/',views.allcoverletter,name='allcoverletter'),
+    path('coverletterpreview/<int:id>/',views.coverletterpreview,name='coverletterpreview'),
 
      ]
  

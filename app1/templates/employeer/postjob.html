@@ -38,7 +38,7 @@
                     <div class="col-md-12">
                         <div class="form-group mb-3">
                             <label for="Job Title" class="form-label">Job Title</label>
-                            <input type="text" class="form-control" id="Job Title" name="job_title" placeholder="Enter job title">
+                            <input type="text" class="form-control" id="JobTitle" name="job_title" placeholder="Enter job title">
                         </div>
 
                     </div>
@@ -72,7 +72,7 @@
                             <div class="form-group col-md-6 mb-4">
                                 <label for="specialisation" class="form-label">Specialisation</label>
                                 <fieldset class="form-group">
-                                    <select class="form-select" id="basicSelect" name="specialisation">
+                                    <select class="form-select" id="basicSelectspec" name="specialisation">
                                         <option >--Select--</option>
                                         {% for i in skills %}
                                                 {% if i.emp_profile_id == user_id %}
@@ -92,7 +92,7 @@
                             <div class="form-group col-md-6 mb-4">
                                 <label for="expectedsalary" class="form-label">Expected Salary</label>
                                 <fieldset class="form-group">
-                                    <select class="form-select" id="basicSelect" name="salary">
+                                    <select class="form-select" id="salary" name="salary">
                                         <option>--Select--</option>
                                         <option value="No Salary">No Salary</option>
                                         <option value="Around 1 lakh per annum">Around 1 lakh per annum</option>
@@ -107,7 +107,7 @@
                             <div class="form-group col-md-6 mb-4">
                                 <label for="qualification" class="form-label">Qualification</label>
                                 <fieldset class="form-group">
-                                    <select class="form-select" id="basicSelect" name="qualification">
+                                    <select class="form-select" id="qualification" name="qualification">
                                         <option >--Select--</option>
                                         {% for i in pos %}
                                                 {% if i.cmp_id_id == user_id %}
@@ -136,7 +136,7 @@
                     </div>
                     
                 </div>
-                <button class="btn btn-primary" type="submit">Post Job</button>
+                <button class="btn btn-primary" id="postajob" type="submit">Post Job</button>
             </form>
         </div>
     </div>

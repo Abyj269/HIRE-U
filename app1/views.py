@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from app1.models import Jobseeker,Employeer,User,Qualifications,EmployeerProfile,Verificationdetails,JobseekerProfile,Skills
 from app1.models import candidateSkillsandTechnologies,JobapplicationDetails,Interviewscheduling
 from django.contrib import messages
-from app1.models import Jobdetails,Qualifications,User,ResumeSchema,PayementDetails
+from app1.models import Jobdetails,Qualifications,User,ResumeSchema,PayementDetails,CoverLetterDetails
 from django.views import generic
 from django.urls import reverse
 from .models import Qualifications
@@ -25,9 +25,22 @@ from django.conf import settings
 from django.http import HttpResponse, Http404
 import os
 from django.db.models import Q
+import json
+import PyPDF2
+import openai
+import spacy
+import IPython
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+from spacy.matcher import PhraseMatcher
+from skillNer.general_params import SKILL_DB
+from skillNer.skill_extractor_class import SkillExtractor
 
 
-
+openai.api_key = settings.OPENAI_SECRET_KEY
+model_engine = "text-davinci-003"
 
 def index(request):
     return render(request,"home.html")
@@ -164,8 +177,9 @@ def postjob(request):
 
         
         postedjob.save()
+      
         messages.success(request,"Job is Successfully Posted" )
-        return redirect('postjob')
+        return redirect(reverse('managejobs',args=[userid]))
     else:
         pos = Qualifications.objects.all()
         skills=Skills.objects.all()
@@ -580,8 +594,7 @@ def applicantdetails(request,id,id2):
         applicationdetails=JobapplicationDetails.objects.get(application_id=id2)
         jobdetails=Jobdetails.objects.all()
         # image_path = os.path.join(settings.MEDIA_ROOT, profiledetails.profile_photo.name)
-
-
+        scheduledetails=Interviewscheduling.objects.filter(application_id=id2)
         context={
             "profilelogo":profiledetails.profile_photo,
             "profileid":id,
@@ -595,7 +608,8 @@ def applicantdetails(request,id,id2):
             # "resume":resume_pdf,
             "applictiondetails":applicationdetails,
             "jobdetails":jobdetails,
-            "appid":applicationdetails.application_id
+            "appid":applicationdetails.application_id,
+            "scheduledetails":scheduledetails
           
         }
         return render(request, 'employeer/applicantdetails.html',context)
@@ -657,42 +671,108 @@ def alljobsposted(request):
         return render(request,"employeer/alljobsposted.html",context)
     return redirect('loginpage')
 
+
+
+
+
+
+
+
+
+
+
 def specificapplicant(request,id):
     if request.user.is_authenticated:
-        # if request.method =='POST':
-        #     searched = request.POST['searched']
-        #     empid=request.user.id
-        #     empprofile=EmployeerProfile.objects.get(user_id=empid)
-        #     applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
-           
-        #     jobseeker=JobseekerProfile.objects.filter(highestqualification__contains=searched)
-           
-            # jobs=Jobdetails.objects.filter(job_title__contains=searched)
-            # context={
-            #     'searched':searched,
-            #     'jobseeker':jobseeker,
-            #     'applicationdetails':applicationdetails,
-            # }
-            # context={
-                
-            #     "jobdetails":jobdetails,
-            #     "employerprofile":empprofile,
-            #     "jobseeker":jobseeker,
-            # }
-
-
-        #     return render(request,"employeer/specificapplicant.html",context) 
-        # else:
+            nlp = spacy.load("en_core_web_sm")
+            skill_extractor = SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
             empid=request.user.id
             empprofile=EmployeerProfile.objects.get(user_id=empid)
-            applicationdetails=JobapplicationDetails.objects.filter(employerprofile_id=empprofile.id)
+            applicationdetails = JobapplicationDetails.objects.filter(job_id=id, employerprofile_id=empprofile.id)
+            jobdetails = Jobdetails.objects.get(job_id=id)
+            title=jobdetails.job_title
+            description=jobdetails.job_description
+            specialisation=jobdetails.specialisation
+            skill_expected=title + description + specialisation
+            #print(skill_expected)
+            if applicationdetails.exists():
+                applicants = {}
+
+                annotation2 = skill_extractor.annotate(skill_expected)
+                expectedskills =annotation2['results']
+                expectedskills.keys()
+                        
+                fullmatch1 = expectedskills['full_matches']
+                ngrams_scored1 = expectedskills['ngram_scored']
+                a_key1 = "doc_node_value"
+
+                f_docnodevalues1 = [a_dict1[a_key1] for a_dict1 in fullmatch1]
+                n_docnodevalues1 = [a_dict1[a_key1] for a_dict1 in ngrams_scored1]
+
+                requiredskills = f_docnodevalues1 + n_docnodevalues1
+                sanitized_values = list(set(requiredskills)) 
+
+
+                for application in applicationdetails:
+                    jobseeker_id = application.jobseekerprofile_id
+                    applicant_resume = application.applicant_resume
+                    resume_path = application.applicant_resume.path
+                    application_id = application.application_id
+
+
+                    with open(resume_path, 'rb') as filehandle:
+                        pdfReader = PyPDF2.PdfReader(filehandle)
+                        pagehandle = pdfReader.pages[0]
+                        text = pagehandle.extract_text()
+                        text = text.replace('o','')
+                        text = text.replace('|','')
+
+                        annotations = skill_extractor.annotate(text)
+                        allresult =annotations['results']
+                        allresult.keys()
+                        
+                        fullmatches = allresult['full_matches']
+                        ngrams_scored = allresult['ngram_scored']
+                        a_key = "doc_node_value"
+
+                        f_docnodevalues = [a_dict[a_key] for a_dict in fullmatches]
+                        n_docnodevalues = [a_dict[a_key] for a_dict in ngrams_scored]
+
+                        all_doc_node_values = f_docnodevalues + n_docnodevalues
+                        cleaned_values = list(set(all_doc_node_values)) 
+
+                        scraped_data = [' '.join(cleaned_values)]
+                        cv = [' '.join(sanitized_values)]
+                        tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+                        tfidf_jobid = tfidf_vectorizer.fit_transform(scraped_data)
+                        user_tfidf = tfidf_vectorizer.transform(cv)
+                        cos_similarity_tfidf = cosine_similarity(user_tfidf, tfidf_jobid)
+                        similarity_score = round(np.max(cos_similarity_tfidf), 2)
+                        
+
+
+
+                    applicants[jobseeker_id] = {'ExtractedSkill': cleaned_values,'Requiredskill':sanitized_values,'Similarity Scores':similarity_score, 'application_id': application_id}
+                    sorted_applicants = sorted(applicants.items(), key=lambda x: x[1]['Similarity Scores'], reverse=True)
+
+                    # Assign rank to each applicant
+                    ranked_applicants = []
+                    rank = 1
+                    for i, (jobseeker_id, application_details) in enumerate(sorted_applicants):
+                        application_details['rank'] = rank
+                        ranked_applicants.append((jobseeker_id, application_details))
+                        if i < len(sorted_applicants) - 1 and application_details['Similarity Scores'] != sorted_applicants[i+1][1]['Similarity Scores']:
+                            rank += 1
+
+                print(ranked_applicants)
+                #print(applicants)
             jobseeker=JobseekerProfile.objects.all()
-            jobdetails=Jobdetails.objects.filter(job_id=id)
+            
             context={
                 "applicantdetails":applicationdetails,
                 "jobdetails":jobdetails,
                 "employerprofile":empprofile,
                 "jobseeker":jobseeker,
+                "ranked_applicants": ranked_applicants,
             }
 
 
@@ -703,20 +783,58 @@ def specificapplicant(request,id):
 
 def addscheduleinterview(request):
     if request.method == 'POST':
+        data = json.loads(request.body)
+        duration = data.get('duration')
+        interviewtype = data.get('interviewType')
+        timeanddate = data.get('timeAndDate')
+        applicationid = data.get('applicationId')
+        existing_interview = Interviewscheduling.objects.filter(
+            application_id=applicationid,
+            interview_timeanddate=timeanddate
+        ).exists()
+        if existing_interview:
+            return JsonResponse({'status': 'Interview already scheduled for this application'})
+        try:
+            interviewdetails = Interviewscheduling(
+                time_duration=duration,
+                interview_type=interviewtype,
+                interview_timeanddate=timeanddate,
+                application_id=applicationid,
+            )
+            interviewdetails.save()
+            return JsonResponse({'status': 'Success'})
+        except:
+            return JsonResponse({'status': 'Invalid'})
+    else:
+        return HttpResponse("Invalid request method")
+
+
+
+
+
+def rescheduleinterview(request,id):
+   
+    if request.method == 'POST':
         duration = request.POST.get('duration')
         interviewtype = request.POST.get('interviewtype')
         timeanddate = request.POST.get('timeanddate')
-        applicationid = request.POST.get('applicationid')
-        interviewdetails = Interviewscheduling(
+        Interviewscheduling.objects.filter(interview_id=id).update(
             time_duration=duration,
             interview_type=interviewtype,
             interview_timeanddate=timeanddate,
-            application_id=applicationid,
-        )
-        interviewdetails.save()
-        return JsonResponse({'status': 'Success'})
+            )
     else:
-        return JsonResponse({'status': 'Error'})
+        interviewscheduling=Interviewscheduling.objects.get(interview_id=id)
+        context={
+            "timeduration":interviewscheduling.time_duration,
+            "interviewtype":interviewscheduling.interview_type,
+            "timeanddate":interviewscheduling.interview_timeanddate,
+        }
+    return JsonResponse(context)
+
+    
+       
+
    
 
 
@@ -1278,22 +1396,80 @@ def userpaymentdetails(request):
     return render(request,'jobseeker/userpaymentdetails.html',context)
 
 
+def coverletterhomepage(request):
+    return render(request,"jobseeker/coverletterhomepage.html")
+
+
+
+def coverletterform(request):
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    coverlettertitle=request.POST.get('covertitle')  
+    candidatename = request.POST.get('name')    
+    role_you_apply = request.POST.get('designation') 
+    company_apply = request.POST.get('companyname')    
+    skills= request.POST.get('skills') 
+
+
+    prompt = f"Generate cover letter for applicant name {candidatename} and I am applying for the position of {role_you_apply} at {company_apply}. I have experience in {skills}."
+    response = openai.Completion.create(
+        model="text-davinci-003", 
+        prompt=prompt,
+        temperature=0.5,
+        max_tokens=1024
+        )
+    completion_text = response.choices[0].text
+    print(completion_text)
+    if request.method == 'POST':
+            letterdetails=CoverLetterDetails(
+            coverlettertitle=coverlettertitle,
+            profile_id=  profileid.id,
+            coverletter=completion_text,
+            )
+            letterdetails.save()
+            # value=CoverLetterDetails.objects.get(coverletter_id=letterdetails.pk)
+            # return redirect(reverse('resumepreview',args=[value.coverletter_id]))
+           
+    return render(request,"jobseeker/coverletterform.html")
+
+
+def allcoverletter(request):
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    coverletters=CoverLetterDetails.objects.filter(profile_id=profileid.id)
+    context={
+        "coverletters":coverletters
+    }
+    return render(request,"jobseeker/allcoverletters.html",context)
+
+
+def coverletterpreview(request,id):
+    userid=request.user.id
+    profileid=JobseekerProfile.objects.get(user_id=userid)
+    coverletters=CoverLetterDetails.objects.get(coverletter_id=id)
+    context={
+        "coverletters":coverletters
+    }
+
+    return render(request,"jobseeker/coverletterpreview.html",context)
+
 
 
 #To render different User Home pages
 
 def adminpage(request):
+    if request.user.is_authenticated:
+        jobseekercount = JobseekerProfile.objects.all().count()
+        actualcount=jobseekercount-1
+        employeercount = EmployeerProfile.objects.all().count()
+        context={
+        'employeercount':employeercount,
+        'jobseekercount':actualcount,
+        }
 
-    jobseekercount = JobseekerProfile.objects.all().count()
-    actualcount=jobseekercount-1
-    employeercount = EmployeerProfile.objects.all().count()
-    context={
-    'employeercount':employeercount,
-    'jobseekercount':actualcount,
-    }
-
-    return render(request,'moderator/admin.html',context)
-
+        return render(request,'moderator/admin.html',context)
+    else:
+        return redirect('loginpage')
 
 
 
@@ -1394,4 +1570,7 @@ def statistics(request):
 
 def reports(request):
     return render(request,'moderator/reportshome.html')
+
+
+
 

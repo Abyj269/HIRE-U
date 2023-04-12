@@ -3,10 +3,12 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import re
-
+from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 import datetime
+from django.template.defaultfilters import linebreaksbr, striptags
+from django.utils.html import escape
 
 
 class User(AbstractUser):
@@ -210,30 +212,12 @@ class ResumeSchema(models.Model):
         return self.resumetitle
 
 class Interviewscheduling(models.Model):
-    interview_schuduling_id=models.AutoField(primary_key=True)
+    interview_id=models.AutoField(primary_key=True)
     time_duration=models.CharField(max_length=255,null=True,blank=True)
     interview_type=models.CharField(max_length=255,null=True,blank=True)
     interview_timeanddate=models.DateTimeField(null=True,blank=True)
     application=models.ForeignKey(JobapplicationDetails,default=None, on_delete=models.CASCADE)
-
-# class scheduling(models.Model):
-# sche_id = models.AutoField(primary_key=True)
-# status=models.BooleanField('status', default=True) 
-# user_id=models.ForeignKey(User ,default=None,on_delete=models.CASCADE)
-# com_id=models.IntegerField(blank=True, null=True)
-# typp=models.CharField(max_length=100,null=True)
-# dura=models.CharField(max_length=100,null=True)
-# train_date =  models.DateTimeField()
-# acc=models.BooleanField('status', default=False) 
-# dec=models.BooleanField('status', default=True) 
-# reason=models.TextField(null=True,blank=True)
-# can_date =  models.DateTimeField(null=True)
-# approvedd=models.BooleanField('approveds', default=False)
-        
-
-#         @property
-#         def name(self):
-#             return self.user_id.username
+    status=models.BooleanField('status', default=0)
 
 
 class PayementDetails(models.Model):
@@ -244,3 +228,18 @@ class PayementDetails(models.Model):
     razorpay_payment_id=models.CharField(max_length=100,null=True,blank=True)
     paid=models.BooleanField(default=False)
     productname=models.CharField(max_length=100,null=True,blank=True)
+
+
+class CoverLetterDetails(models.Model):
+    coverletter_id=models.AutoField(primary_key=True)
+    coverlettertitle=models.CharField(max_length=255,null=True,blank=True)
+    profile=models.ForeignKey(JobseekerProfile,default=None, on_delete=models.CASCADE)
+    coverletter=models.TextField(max_length=30000,null=True,blank=True)
+
+    def formatted_description(self):
+        # Remove any HTML tags from the description text
+        text = striptags(self.coverletter)
+        # Escape the text to prevent any HTML injection
+        text = escape(text)
+        # Return the formatted text using the linebreaksbr filter
+        return linebreaksbr(text, autoescape=True)

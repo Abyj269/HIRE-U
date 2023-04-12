@@ -1,0 +1,64 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h4></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 mb-5">
+    <div class="card">
+        <div class="row">
+            <div class="col-lg-12">
+                <form action="{% url 'coverletterform' %}" method="POST" enctype="multipart/form-data" class="shadow p-5"> 
+                    {% csrf_token %}
+                    <h5 class="mt-3 mb-3">Cover Letter</h5>
+                   
+
+                    <div class="form-group">
+                        <label>Letter Title</label>
+                        <input type="text" name="covertitle" class="form-control mt-2 mb-2" placeholder="Enter your title" required>
+                    </div>
+                    <hr>
+                    <hr>
+
+                    <div class="form-group">
+                        <label>Name Of The Job Applicant</label>
+                        <input type="text" name="name" class="form-control mt-2 mb-2" placeholder="Enter your name" required>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label>Designation</label>
+                        <input  type="text"  class="form-control mt-2 mb-2 " name="designation" placeholder="Enter your role" required></input>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" name="companyname" class="form-control mt-2 mb-2" placeholder="Enter the company name you are applying" required>
+                    </div>
+                   
+                    
+                  
+                    <div class="form-group">
+                        <label>Skills Obtained</label>
+                        <input name="skills" rows="3" name="skills" class="form-control mt-2 mb-2" data-role="tagsinput" placeholder="Enter your skills" required>
+                    </div>
+        
+                        <button type="submit" class="btn btn-success col-md-12">CREATE</button>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

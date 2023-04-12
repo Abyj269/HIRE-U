@@ -1,0 +1,61 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h4>All Resumes</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5 mb-5 ">
+    {% if coverletters %}
+        
+        <div class="row card shadow">
+            <table class='table table-bordered' id="table1">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Cover Letter Title</th>
+                        <th>Action</th>
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                {% for i in coverletters %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.coverlettertitle}}</td>
+                        <td>
+                            <a href="{% url 'coverletterpreview' i.coverletter_id %}" style="text-decoration: none;" class="boxed-btn3 ml-2">View</a>
+                            <a href="" style="text-decoration: none;" class="boxed-btn2 ml-2">Delete</a>
+                        
+                        </td>
+                        
+
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+
+               
+            
+            
+            
+    </div>
+
+    {% else %}
+        No Cover Letters Created
+    {% endif %}
+</div>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+{% endblock %}

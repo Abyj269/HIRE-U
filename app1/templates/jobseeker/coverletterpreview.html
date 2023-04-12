@@ -1,0 +1,27 @@
+{% extends 'jobseeker\layouts\base.html' %}
+{% load static %}
+{% block content %}
+
+<link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'jobseeker\css\resumestyle.css' %}">
+<div class="bradcam_area bradcam_bg_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="bradcam_text">
+                    <h4></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 mb-5">
+    <div class="card shadow p-5">
+        
+            {% comment %} <pre> {{ coverletters.coverletter|safe}}</pre> {% endcomment %}
+            {{ coverletters.formatted_description|safe }}
+    
+    </div>
+</div>
+{% endblock %}

@@ -54,15 +54,18 @@
                     <th>Applicant Name</th>
                     <th>Photo</th>
                     <th>View</th>
+                    <th>Similarity Ranking</th>
+                    <th>Resume</th>
                 </tr>
             </thead>
             
             <tbody>
                 {% for i in applicantdetails %}
-                    {% for j in jobdetails %}
-                        {% if i.job_id == j.job_id %}  
+                    {% with forloop.counter as outer_counter %}
+                    {% if jobdetails %}
+                        {% if i.job_id == jobdetails.job_id %}  
                             <tr>
-                                <td>{{forloop.counter}} </td>
+                                <td>{{ outer_counter }}</td>
                                 <td> 
                                   {% for k in jobseeker %}
                                       {% if k.id == i.jobseekerprofile_id %}
@@ -86,9 +89,27 @@
                                         {% endif %}                                    
                                     {% endfor %}
                                 </td>
+                                <td>
+                                    {% for jobseeker_id, application_details in ranked_applicants %}
+                                    
+                                        {% if i.application_id ==  application_details.application_id %}
+                                            {{ application_details.rank }}
+                                        {% endif %}
+                                        
+                                 
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for l in jobseeker %}
+                                        {% if l.id == i.jobseekerprofile_id %}
+                                            <a href="{% url 'showpdf' i.application_id %}" target="_blank" class="btn btn-danger">Resume</a>
+                                        {% endif %}                                    
+                                    {% endfor %}
+                                </td>
                             </tr>
                       {%  endif %}
-                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </tbody>
         {% endif %} 
@@ -98,45 +119,7 @@
     </div>
 
 
-    <script>
-        //console.log("Hai");
-
-        {% comment %} $("#schedulebutton").on("click",function(e)
-        {
-            console.log("Hai");
-        }) {% endcomment %}
-        $('.schedule-form').submit(function(e) {
-          console.log("Hai");
-          e.preventDefault();
-          $.ajax({
-            url: "/addscheduleinterview/",
-            type: "POST",
-            data: $(this).serialize(),
-            beforeSend: function(xhr) {
-              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            },
-            success: function(data) {
-              if (data.status == "Success") {
-                // do something
-              } else {
-                alert(data.message);
-              }
-            },
-            error: function() {
-              alert("");
-            }
-          });
-        });
-
-
-        function getCookie(name) {
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length == 2) return parts.pop().split(";").shift();
-          }
-             
-      </script>
-
+    
 
     
 
