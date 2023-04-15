@@ -608,8 +608,9 @@ def applicantdetails(request,id,id2):
             # "resume":resume_pdf,
             "applictiondetails":applicationdetails,
             "jobdetails":jobdetails,
+            "jobid": applicationdetails.job_id,
             "appid":applicationdetails.application_id,
-            "scheduledetails":scheduledetails
+            "scheduledetails":scheduledetails,
           
         }
         return render(request, 'employeer/applicantdetails.html',context)
@@ -788,6 +789,7 @@ def addscheduleinterview(request):
         interviewtype = data.get('interviewType')
         timeanddate = data.get('timeAndDate')
         applicationid = data.get('applicationId')
+        jobid = data.get('jobid')
         existing_interview = Interviewscheduling.objects.filter(
             application_id=applicationid,
             interview_timeanddate=timeanddate
@@ -800,6 +802,7 @@ def addscheduleinterview(request):
                 interview_type=interviewtype,
                 interview_timeanddate=timeanddate,
                 application_id=applicationid,
+                job_id=jobid,
             )
             interviewdetails.save()
             return JsonResponse({'status': 'Success'})
@@ -1286,7 +1289,32 @@ def success(request):
 
 
     
+def notifications(request):
+
+    userid=request.user.id
+    jobseekerprofile=JobseekerProfile.objects.get(user_id=userid)
+    applicationdetails=JobapplicationDetails.objects.filter(jobseekerprofile_id=jobseekerprofile.id)
+
     
+    application_ids = [app.application_id for app in applicationdetails]
+
+   
+
+    interviewscheduling = Interviewscheduling.objects.filter(application_id__in=application_ids)
+
+    job_ids=[job.job_id for job in interviewscheduling]
+
+    jobdetails=Jobdetails.objects.all()
+
+    context={
+        "applicationdetails":  applicationdetails,
+        "interviewscheduling":interviewscheduling,
+        "jobdetails":jobdetails,
+        "jobids":job_ids,
+    }
+
+
+    return render(request,"jobseeker/notifications.html",context) 
 
 
 

@@ -92,6 +92,6 @@ urlpatterns = [
     path('coverletterform/',views.coverletterform,name='coverletterform'),
     path('allcoverletter/',views.allcoverletter,name='allcoverletter'),
     path('coverletterpreview/<int:id>/',views.coverletterpreview,name='coverletterpreview'),
-
+    path('notifications/',views.notifications,name='notifications'),
      ]
  

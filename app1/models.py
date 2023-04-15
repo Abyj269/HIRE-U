@@ -217,8 +217,9 @@ class Interviewscheduling(models.Model):
     interview_type=models.CharField(max_length=255,null=True,blank=True)
     interview_timeanddate=models.DateTimeField(null=True,blank=True)
     application=models.ForeignKey(JobapplicationDetails,default=None, on_delete=models.CASCADE)
+    job=models.ForeignKey(Jobdetails,default=None, on_delete=models.CASCADE)
     status=models.BooleanField('status', default=0)
-
+    message=models.TextField(max_length=255,null=True,blank=True)
 
 class PayementDetails(models.Model):
     user_name=models.CharField(max_length=255,null=True,blank=True)
