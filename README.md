@@ -2,10 +2,10 @@
 
 A Recruitment Portal Build Using Python Web Framework
 
-Initially appeared on
-[gist](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2). But the page cannot open anymore so that is why I have moved it here.
+<!-- Initially appeared on
+[gist](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2). But the page cannot open anymore so that is why I have moved it here. -->
 
-## Getting Started
+<!-- ## Getting Started
 
 These instructions will give you a copy of the project up and running on
 your local machine for development and testing purposes. See deployment
@@ -71,10 +71,6 @@ We use [Semantic Versioning](http://semver.org/) for versioning. For the version
 available, see the [tags on this
 repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
 
-## Authors
-
-  - **Aby Jose** 
-   
 
 ## License
 
@@ -87,3 +83,12 @@ details
   - Hat tip to anyone whose code is used
   - Inspiration
   - etc
+ -->
+ 
+ 
+ 
+## Authors
+
+  - **Aby Jose** 
+   
+ 
