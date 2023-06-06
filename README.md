@@ -6,15 +6,16 @@ A Recruitment Portal Build Using Python Web Framework
 # Installation
 To run this project locally, follow these steps:
 
-Clone the repository: git clone https://github.com/Abyj269/HIRE-U.git <br>
-Change to the project directory: cd hireu  <br>
-Create a virtual environment: python -m venv venv  <br>
-Activate the virtual environment:  <br>
-For Windows: venv\Scripts\activate  <br>
-For macOS/Linux: source venv/bin/activate  <br>
-Install the dependencies: pip install -r requirements.txt <br>
-Apply database migrations: python manage.py migrate <br>
-Start the development server: python manage.py runserver
+Clone the repository: git clone https://github.com/Abyj269/HIRE-U.git <br><br>
+Change to the project directory: cd hireu  <br><br>
+Create a virtual environment: python -m venv venv  <br><br>
+Activate the virtual environment:  <br><br>
+For Windows: venv\Scripts\activate  <br><br>
+For macOS/Linux: source venv/bin/activate  <br><br>
+Install the dependencies: pip install -r requirements.txt <br><br>
+Apply database migrations: python manage.py migrate <br><br>
+Apply database migrations: python manage.py migrate <br><br>
+Start the development server: python manage.py runserver<br>
  
  <br>
 
