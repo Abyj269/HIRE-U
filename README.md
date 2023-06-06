@@ -11,7 +11,7 @@ To run this project locally, follow these steps:
  <li>Create a virtual environment: python -m venv venv </li>  <br><br>
  <li>Activate the virtual environment:  <br><br>
  &nbsp;&nbsp;&nbsp;&nbsp;For Windows: venv\Scripts\activate  <br><br>
- &nbsp;&nbsp;&nbsp;;&nbsp;For macOS/Linux: source venv/bin/activate  <br><br>
+ &nbsp;&nbsp;&nbsp;&nbsp;For macOS/Linux: source venv/bin/activate  <br><br>
  <li>Install the dependencies: pip install -r requirements.txt </li> <br><br>
  <li>Apply database migrations: python manage.py migrate </li><br><br>
  <li>Apply database migrations: python manage.py migrate </li><br><br>
